@@ -92,6 +92,17 @@ export function initDashboardPage() {
   loadProfileData(currentUserId);
   fetchMyListings(currentUserId);
 
+  // ★★★ NEW: Dashboard Logout Listener ★★★
+  const dashLogoutBtn = document.getElementById("dashboard-logout-btn");
+  if (dashLogoutBtn) {
+    dashLogoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      // Open the global logout modal
+      const modal = document.getElementById("logout-modal");
+      if (modal) modal.classList.add("is-visible");
+    });
+  }
+
   // Setup Form Listeners
   if (categorySelect) {
     categorySelect.addEventListener("change", handleCategoryChange);
@@ -151,6 +162,9 @@ function handleCategoryChange() {
 // --- Dashboard Tabs Logic ---
 function initDashboardTabs() {
   dashboardNavLinks.forEach((link) => {
+    // Skip the logout button so it doesn't try to switch tabs
+    if (link.id === "dashboard-logout-btn") return;
+
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const panelId = link.dataset.panel;

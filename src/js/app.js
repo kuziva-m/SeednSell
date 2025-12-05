@@ -15,30 +15,25 @@ initScrollAnimations();
 initMobileNav();
 initHeaderScroll();
 
-// --- ROBUST SMART NAVIGATION (Event Delegation) ---
-// This fixes the "Menu won't open" issue by listening to clicks globally
+// --- ROBUST SMART NAVIGATION ---
 document.addEventListener("click", (e) => {
   const target = e.target.closest("#mobile-menu-btn");
   const closeBtn = e.target.closest("#close-menu-btn");
   const overlay = document.getElementById("mobile-menu-overlay");
 
-  // 1. Open Menu
   if (target && overlay) {
     updateMenuState();
     overlay.classList.add("is-visible");
   }
 
-  // 2. Close Menu (X button)
   if (closeBtn && overlay) {
     overlay.classList.remove("is-visible");
   }
 
-  // 3. Close Menu (Clicking Background)
   if (e.target === overlay) {
     overlay.classList.remove("is-visible");
   }
 
-  // 4. Protected Links Guard (Sell & Chat)
   const protectedLink = e.target.closest(".protected-link");
   if (protectedLink) {
     const userId = getCurrentUserId();
@@ -49,7 +44,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// Dynamic Menu Content
 function updateMenuState() {
   const userId = getCurrentUserId();
   const profile = getUserProfile();
@@ -57,12 +51,15 @@ function updateMenuState() {
   const authLink = document.getElementById("menu-auth-link");
 
   if (userId) {
+    // Keep mobile name for personalization if desired, or change to "My Account" here too.
+    // Let's keep personalization on mobile menu as it's distinct.
     nameEl.textContent = `Hi, ${profile?.full_name || "Farmer"}`;
+
     if (authLink) {
       authLink.href = "/dashboard.html";
       authLink.innerHTML = `<i class="fa-solid fa-user"></i> My Dashboard`;
     }
-    // Add Logout if missing
+
     if (!document.getElementById("menu-logout")) {
       const container = document.querySelector(".mobile-menu-links");
       if (container) {
@@ -72,10 +69,14 @@ function updateMenuState() {
         logoutBtn.className = "menu-link";
         logoutBtn.style.color = "var(--danger-color)";
         logoutBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> Log Out`;
+
+        // ★ FIXED LOGOUT LOGIC HERE ★
         logoutBtn.onclick = (e) => {
           e.preventDefault();
-          const desktopAuthLink = document.getElementById("auth-link");
-          if (desktopAuthLink) desktopAuthLink.click();
+          // Open Modal Directly
+          const modal = document.getElementById("logout-modal");
+          if (modal) modal.classList.add("is-visible");
+
           document
             .getElementById("mobile-menu-overlay")
             .classList.remove("is-visible");
@@ -94,7 +95,7 @@ function updateMenuState() {
   }
 }
 
-// Highlight Active Tab
+// ... rest of file (Highlight Active Tab, Service Worker, Dynamic Router, Toast) remains same
 const currentPath = window.location.pathname;
 document.querySelectorAll(".mobile-bottom-nav .nav-item").forEach((link) => {
   const href = link.getAttribute("href");
@@ -106,8 +107,6 @@ document.querySelectorAll(".mobile-bottom-nav .nav-item").forEach((link) => {
   }
 });
 
-// --- SERVICE WORKER AUTO-RELOAD ---
-// If the Service Worker updates, reload the page so the user sees the new version immediately.
 if ("serviceWorker" in navigator) {
   let refreshing = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -118,7 +117,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// --- DYNAMIC ROUTER ---
 async function loadPageLogic() {
   try {
     if (currentPath.endsWith("/") || currentPath.endsWith("/index.html")) {
@@ -144,7 +142,6 @@ async function loadPageLogic() {
 }
 loadPageLogic();
 
-// Global Toast
 window.showToast = function (message, type = "info") {
   let container = document.getElementById("toast-container");
   if (!container) {

@@ -16,35 +16,42 @@ export function handleAuthStateChange() {
       // ============================
       currentUserId = session.user.id;
 
-      // 1. Update Desktop Header: Show USER AVATAR
+      // 1. Update Desktop Header: Show USER AVATAR + LOGOUT BUTTON
       const authSection = document.getElementById("header-auth-section");
       if (authSection) {
         authSection.innerHTML = `
-          <a href="/dashboard.html" class="user-avatar-btn" title="Go to Dashboard">
-            <div class="avatar-circle">
-              <i class="fa-solid fa-user"></i>
-            </div>
-            <span class="user-name-text" id="header-username">My Account</span>
-          </a>
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="/dashboard.html" class="user-avatar-btn" title="Go to Dashboard">
+              <div class="avatar-circle">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <span class="user-name-text" id="header-username">My Account</span>
+            </a>
+            <button id="header-logout-btn" class="action-icon" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 5px;" title="Log Out">
+              <i class="fa-solid fa-right-from-bracket" style="color: var(--danger-color);"></i>
+            </button>
+          </div>
         `;
+
+        // Attach Logout Listener immediately
+        const logoutBtn = document.getElementById("header-logout-btn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            const modal = document.getElementById("logout-modal");
+            if (modal) modal.classList.add("is-visible");
+          });
+        }
       }
 
-      // 2. Redirect if on Auth Page (Prevent double login)
+      // 2. Redirect if on Auth Page
       if (window.location.pathname.includes("auth.html")) {
         window.location.href = "/index.html";
       }
 
-      // 3. Fetch Profile & Update UI
+      // 3. Fetch Profile (Keep this to store userProfile for other uses, but REMOVED header text update)
       fetchUserProfile(currentUserId).then((profile) => {
         userProfile = profile;
-
-        // Update Header Name
-        const nameEl = document.getElementById("header-username");
-        if (nameEl && profile && profile.full_name) {
-          // Show first name only
-          const firstName = profile.full_name.split(" ")[0];
-          nameEl.textContent = firstName;
-        }
+        // NOTE: We no longer update #header-username here. It stays as "My Account".
       });
 
       // 4. Start Services
@@ -57,18 +64,15 @@ export function handleAuthStateChange() {
       userProfile = null;
       currentUserId = null;
 
-      // 1. Security Redirect: Kick user out of Dashboard
       if (window.location.pathname.includes("dashboard.html")) {
         window.location.href = "/auth.html";
       }
 
-      // 2. Update Desktop Header: Show LOGIN LINK
       const authSection = document.getElementById("header-auth-section");
       if (authSection) {
         authSection.innerHTML = `<a href="/auth.html" class="login-link">Login</a>`;
       }
 
-      // 3. Stop Services
       if (notificationSubscription) notificationSubscription.unsubscribe();
     }
   });
@@ -76,12 +80,10 @@ export function handleAuthStateChange() {
 
 // --- Auth Page Logic (Login & Signup Forms) ---
 export function initAuthPage() {
-  // Select elements INSIDE the function to ensure they exist
   const signupForm = document.getElementById("signup-form");
   const loginForm = document.getElementById("login-form");
   const signupPassword = document.getElementById("signup-password");
 
-  // Real-time password validation
   if (signupPassword) {
     signupPassword.addEventListener("input", (e) => {
       const val = e.target.value;
@@ -98,7 +100,6 @@ export function initAuthPage() {
     });
   }
 
-  // Handle Sign Up
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -147,7 +148,6 @@ export function initAuthPage() {
     });
   }
 
-  // Handle Login
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -251,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutModal.classList.remove("is-visible")
     );
 
-    // Close if clicking background
     logoutModal.addEventListener("click", (e) => {
       if (e.target === logoutModal) logoutModal.classList.remove("is-visible");
     });
@@ -263,6 +262,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Export these for use in other files (like app.js and dashboard.js)
 export const getCurrentUserId = () => currentUserId;
 export const getUserProfile = () => userProfile;
