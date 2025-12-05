@@ -58,7 +58,7 @@ const CATEGORY_CONFIG = {
     btnText: "Browse Inputs",
     unitDefault: "bag",
     promo: {
-      bgImage: "/images/promo-inputs.webp", // <--- Change this to .jpg if needed
+      bgImage: "/images/promo-inputs.jpg", // <--- Change this to .jpg if needed
       left: {
         title: '<i class="fa-solid fa-shop icon"></i>Looking for Bulk Inputs?',
         desc: "We supply large-scale commercial farms with fertilizer, chemicals, and seed at wholesale prices.",
@@ -79,7 +79,7 @@ const CATEGORY_CONFIG = {
     btnText: "Find Services",
     unitDefault: "job",
     promo: {
-      bgImage: "/images/promo-services.webp", // <--- Change this to .jpg if needed
+      bgImage: "/images/promo-services.jpg", // <--- Change this to .jpg if needed
       left: {
         title:
           '<i class="fa-solid fa-clipboard-list icon"></i>Need Contract Work Done?',
