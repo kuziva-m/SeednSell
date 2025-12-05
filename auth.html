@@ -104,16 +104,65 @@
             <label for="signup-phone">Phone Number (e.g., 077...)</label>
             <input type="tel" id="signup-phone" required />
           </div>
+
           <div class="form-group">
-            <label for="signup-location">Your Location (e.g., Marondera)</label>
-            <input type="text" id="signup-location" required />
+            <label for="signup-entity-type">I operate as a...</label>
+            <select id="signup-entity-type" required>
+              <option value="" disabled selected>
+                -- Select Entity Type --
+              </option>
+              <option value="individual">
+                Individual / Small Scale Farmer
+              </option>
+              <option value="company">Registered Company</option>
+            </select>
+            <small
+              style="
+                color: #666;
+                display: block;
+                margin-top: 4px;
+                font-size: 0.85rem;
+              "
+            >
+              Select "Company" if you have Tax Clearance/Registration documents.
+            </small>
           </div>
+
+          <div class="form-row" style="display: flex; gap: 1rem">
+            <div class="form-group" style="flex: 1">
+              <label for="signup-city">City / Town</label>
+              <select id="signup-city" required>
+                <option value="" disabled selected>-- Select --</option>
+                <option value="Harare">Harare</option>
+                <option value="Bulawayo">Bulawayo</option>
+                <option value="Mutare">Mutare</option>
+                <option value="Gweru">Gweru</option>
+                <option value="Masvingo">Masvingo</option>
+                <option value="Chinhoyi">Chinhoyi</option>
+                <option value="Marondera">Marondera</option>
+                <option value="Kwekwe">Kwekwe</option>
+                <option value="Kadoma">Kadoma</option>
+                <option value="Bindura">Bindura</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1">
+              <label for="signup-area">Neighborhood / Area</label>
+              <input
+                type="text"
+                id="signup-area"
+                placeholder="e.g. Borrowdale"
+                required
+              />
+            </div>
+          </div>
+
           <div class="form-group">
-            <label for="signup-role">Are you a...</label>
+            <label for="signup-role">Primary Role</label>
             <select id="signup-role" required>
-              <option value="" disabled selected>-- Select an option --</option>
-              <option value="farmer">Farmer / Producer</option>
-              <option value="buyer">Buyer / Customer</option>
+              <option value="" disabled selected>-- Select Role --</option>
+              <option value="farmer">Seller (Farmer/Supplier)</option>
+              <option value="buyer">Buyer (Customer)</option>
             </select>
           </div>
           <div class="form-group">

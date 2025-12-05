@@ -48,10 +48,9 @@ export function handleAuthStateChange() {
         window.location.href = "/index.html";
       }
 
-      // 3. Fetch Profile (Keep this to store userProfile for other uses, but REMOVED header text update)
+      // 3. Fetch Profile
       fetchUserProfile(currentUserId).then((profile) => {
         userProfile = profile;
-        // NOTE: We no longer update #header-username here. It stays as "My Account".
       });
 
       // 4. Start Services
@@ -111,8 +110,15 @@ export function initAuthPage() {
       const password = document.getElementById("signup-password").value;
       const name = document.getElementById("signup-name").value;
       const rawPhone = document.getElementById("signup-phone").value;
-      const location = document.getElementById("signup-location").value;
+
+      // NEW FIELDS
+      const city = document.getElementById("signup-city").value;
+      const neighborhood = document.getElementById("signup-area").value;
+      const entityType = document.getElementById("signup-entity-type").value;
       const role = document.getElementById("signup-role").value;
+
+      // Combine Location
+      const fullLocation = `${city}, ${neighborhood}`;
 
       const phone = sanitizePhoneNumber(rawPhone);
 
@@ -129,14 +135,22 @@ export function initAuthPage() {
       }
 
       if (data.user) {
+        // Note: Assuming your 'profiles' table can accept extra JSON data
+        // or you are just combining location. We will stick to the standard fields.
         const { error: profileError } = await sb.from("profiles").insert({
           id: data.user.id,
           full_name: name,
           phone_number: phone,
-          location: location,
+          location: fullLocation, // Saving Combined Location
           user_role: role,
+          // If you have an 'entity_type' column in your DB, add: entity_type: entityType
+          // For now, we can prepend it to the name or store it if schema allows.
+          // Let's append it to full_name to be safe for display: "FARM (Company)"
+          // Or rely on future DB update.
         });
+
         if (profileError) {
+          console.error("Profile save error:", profileError);
           setMessage("Sign up successful, but profile saving failed.", "error");
           submitBtn.disabled = false;
           submitBtn.innerHTML = `Sign Up`;

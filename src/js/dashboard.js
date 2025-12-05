@@ -88,11 +88,16 @@ export function initDashboardPage() {
   const layout = document.querySelector(".dashboard-layout");
   if (layout) layout.classList.add("is-ready");
 
+  // ★ SHOW VERIFICATION BANNER ★
+  // For now, we show this to everyone. In the future, check profile.is_verified
+  const banner = document.getElementById("verification-banner");
+  if (banner) banner.style.display = "block";
+
   initDashboardTabs();
   loadProfileData(currentUserId);
   fetchMyListings(currentUserId);
 
-  // ★★★ NEW: Dashboard Logout Listener ★★★
+  // ★ NEW: Dashboard Logout Listener ★
   const dashLogoutBtn = document.getElementById("dashboard-logout-btn");
   if (dashLogoutBtn) {
     dashLogoutBtn.addEventListener("click", (e) => {

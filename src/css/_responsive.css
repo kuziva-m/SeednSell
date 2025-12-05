@@ -1,6 +1,3 @@
-/* src/css/_responsive.css */
-
-/* Switch to Mobile View earlier (900px) to accommodate the new wider Desktop Header */
 @media (max-width: 900px) {
   /* --- 1. HEADER ADJUSTMENTS --- */
   .header-container {
@@ -15,9 +12,46 @@
   }
 
   /* Hide Desktop-Specific Zones */
-  .center-nav,
+  /* .center-nav, */ /* REMOVED THIS to unhide nav pills */
   .header-right {
     display: none !important;
+  }
+
+  /* ★ UN-HIDE CENTER NAV (Pills) ★ */
+  .header-center {
+    display: flex !important;
+    position: absolute;
+    top: 70px; /* Push below header */
+    left: 0;
+    width: 100%;
+    overflow-x: auto; /* Allow scrolling */
+    padding: 10px;
+    background: #fff;
+    justify-content: flex-start; /* Align left so they scroll nicely */
+    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+  }
+  .header-center::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
+  }
+
+  /* Ensure pills don't wrap */
+  .nav-pills-container {
+    flex-wrap: nowrap;
+    width: max-content; /* Let it expand */
+    border: none;
+    background: transparent;
+    gap: 10px;
+  }
+
+  /* Make pills smaller on mobile */
+  .nav-pill {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border: 1px solid #eee;
+    background: #f9f9f9;
+    white-space: nowrap;
   }
 
   /* Hide the top hamburger menu (we use the Bottom Bar "Menu" tab) */
@@ -35,6 +69,7 @@
     flex-direction: column-reverse;
     text-align: center;
     padding: 1rem;
+    margin-top: 40px; /* Push hero down because of mobile nav pills */
   }
 
   .hero-logo-column {
