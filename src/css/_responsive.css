@@ -1,0 +1,362 @@
+/* src/css/_responsive.css */
+
+/* Switch to Mobile View earlier (900px) to accommodate the new wider Desktop Header */
+@media (max-width: 900px) {
+  /* --- 1. HEADER ADJUSTMENTS --- */
+  .header-container {
+    display: flex; /* Ensure flex behavior */
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Hide Desktop-Specific Zones */
+  .center-nav,
+  .header-right {
+    display: none !important;
+  }
+
+  /* Hide the top hamburger menu (we use the Bottom Bar "Menu" tab) */
+  .mobile-nav-toggle {
+    display: none !important;
+  }
+
+  /* Prevent scrolling when menu is open */
+  body.nav-open {
+    overflow: hidden;
+  }
+
+  /* --- 2. HERO & LAYOUT --- */
+  .hero-content {
+    flex-direction: column-reverse;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .hero-logo-column {
+    text-align: center;
+  }
+
+  .hero-logo {
+    max-width: 200px;
+  }
+
+  .hero-text-column {
+    text-align: center;
+  }
+
+  .hero-text-column h2 {
+    font-size: 2.2rem;
+  }
+
+  .hero-text-column p {
+    font-size: 1rem;
+  }
+
+  /* Listing Detail Page */
+  #listing-detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .farmer-details-card {
+    position: static;
+    top: auto;
+  }
+
+  #listing-title {
+    font-size: 2rem;
+  }
+
+  #listing-price {
+    font-size: 1.3rem;
+  }
+
+  /* Chat Layout */
+  .chat-container {
+    display: block;
+    position: relative;
+    height: calc(100vh - 140px);
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .chat-sidebar {
+    width: 100%;
+    height: 100%;
+    border-right: none;
+    border-bottom: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .chat-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: #fafafa;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .chat-container.chat-active .chat-main {
+    transform: translateX(0);
+  }
+
+  .chat-back-btn {
+    display: block;
+    margin-right: 10px;
+  }
+
+  .chat-header {
+    padding: 0.8rem 1rem;
+  }
+
+  /* General Components */
+  .b2b-cta {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar {
+    position: static;
+    top: auto;
+    padding: 0.5rem;
+  }
+
+  .dashboard-nav {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .dashboard-nav-link {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.9rem;
+    padding: 0.7rem 0.5rem;
+  }
+
+  .dashboard-nav-link .icon {
+    display: none;
+  }
+
+  /* --- 3. BOTTOM NAVIGATION --- */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background-color: #ffffff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: 100%;
+    height: 100%;
+    transition: color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .nav-item i {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+
+  .nav-item.active,
+  .nav-item:hover {
+    color: var(--primary-color);
+  }
+
+  /* Central "Sell" Button Style */
+  .nav-cta-item .cta-icon {
+    width: 45px;
+    height: 45px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 8px rgba(104, 159, 56, 0.4);
+    transform: translateY(-15px);
+    border: 4px solid #fff;
+  }
+
+  .nav-cta-item span {
+    transform: translateY(-8px);
+  }
+
+  /* Adjust body padding */
+  body {
+    padding-bottom: 80px;
+  }
+
+  .icon-container {
+    position: relative;
+  }
+  #bottom-nav-bubble {
+    top: -5px;
+    right: -5px;
+  }
+
+  /* --- 4. SLIDE-UP MENU OVERLAY --- */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end; /* Aligns content to bottom */
+  }
+
+  .mobile-menu-overlay.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-menu-content {
+    background: #fff;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 1.5rem;
+    transform: translateY(100%); /* Hidden below screen */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+    /* Allow scrolling inside the menu if it gets too tall */
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu-overlay.is-visible .mobile-menu-content {
+    transform: translateY(0); /* Slide up */
+  }
+
+  .mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    flex-shrink: 0; /* Keep header visible */
+  }
+
+  .mobile-menu-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+  }
+
+  #close-menu-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  /* Scrollable Links Area */
+  .mobile-menu-scroll {
+    overflow-y: auto;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  /* New Section Headers */
+  .menu-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .menu-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #999;
+    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+    margin-left: 0.5rem;
+    font-weight: 600;
+  }
+
+  .mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .menu-link {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+
+  .menu-link:active {
+    background-color: #eee;
+  }
+
+  .menu-link i {
+    width: 35px; /* Fixed width for icon alignment */
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-right: 10px;
+  }
+
+  .menu-link.highlight {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: 700;
+  }
+}
+
+/* Desktop: Hide bottom nav & mobile menu */
+@media (min-width: 901px) {
+  .mobile-bottom-nav,
+  .mobile-menu-overlay {
+    display: none;
+  }
+}

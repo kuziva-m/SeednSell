@@ -1,0 +1,66 @@
+/* Marketplace Toggle Slider */
+.marketplace-toggle {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 2rem auto;
+  background-color: #eee;
+  border-radius: 50px;
+  padding: 5px;
+  border: 1px solid #ddd;
+}
+
+.toggle-option {
+  flex: 1;
+  text-align: center;
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.3s ease-in-out;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  height: calc(100% - 10px);
+  width: calc(50% - 5px);
+  background-color: var(--primary-color);
+  border-radius: 50px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.toggle-option.active {
+  color: #fff;
+}
+
+/* Marketplace Content Sliding Wrapper */
+.marketplace-content-slider {
+  overflow: hidden;
+  width: 100%;
+}
+
+.marketplace-content-wrapper {
+  display: flex;
+  width: 200%;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateX(0);
+}
+
+.marketplace-grid {
+  width: 50%;
+  padding: 0 0.5rem;
+}
+
+.marketplace-toggle-wrapper.featured-active .marketplace-content-wrapper {
+  transform: translateX(-50%);
+}
+
+.marketplace-toggle-wrapper.featured-active .toggle-slider {
+  transform: translateX(100%);
+}

@@ -1,0 +1,184 @@
+/* HIDE DASHBOARD BY DEFAULT */
+.dashboard-layout {
+  display: none; /* Hidden until JS confirms login */
+}
+
+/* JS will add this class when ready */
+.dashboard-layout.is-ready {
+  display: grid;
+}
+.dashboard-layout {
+  max-width: var(--max-width);
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.dashboard-sidebar {
+  background-color: var(--bg-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--box-shadow);
+  padding: 1rem;
+  position: sticky;
+  top: 100px;
+}
+
+.dashboard-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dashboard-nav-link {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-nav-link .icon {
+  width: 30px;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+.dashboard-nav-link:hover {
+  background-color: #f0f0f0;
+  color: var(--text-main);
+}
+
+.dashboard-nav-link.active {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+.dashboard-nav-link.active .icon {
+  color: #fff;
+}
+
+.dashboard-panel {
+  display: none;
+}
+.dashboard-panel.active {
+  display: block;
+}
+
+/* Dashboard Page Styles */
+.dashboard-card {
+  background-color: var(--bg-white);
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 2rem;
+}
+
+.dashboard-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+#my-listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+#my-listings-grid .listing-card {
+  cursor: default;
+}
+#my-listings-grid .listing-card:hover {
+  transform: none;
+  box-shadow: var(--box-shadow);
+}
+#my-listings-grid .listing-card img {
+  height: 150px;
+}
+#my-listings-grid .listing-card-content {
+  padding: 0.8rem;
+}
+
+.listing-card-actions {
+  padding: 0 0.8rem 0.8rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+#my-listings-grid .listing-card h3 {
+  font-size: 1.1rem;
+}
+
+/* Delete Button */
+#my-listings-grid .delete-btn {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex: 1;
+  margin: 0;
+  padding: 0.5rem 0.8rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+#my-listings-grid .delete-btn:hover {
+  background-color: var(--danger-color-hover);
+}
+
+/* Edit Button */
+.edit-btn {
+  flex: 1;
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  margin: 0;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.8rem;
+  line-height: 1.6;
+}
+.edit-btn:hover {
+  background-color: var(--primary-color-hover);
+  border-color: var(--primary-color-hover);
+  color: white;
+}
+
+#listing-message,
+#profile-message {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+#profile-message.success,
+#listing-message.success {
+  color: green;
+}
+#profile-message.error,
+#listing-message.error {
+  color: var(--danger-color);
+}
+
+/* Image Preview Styles */
+#image-preview-wrapper {
+  margin-bottom: 1rem;
+}
+
+#image-preview-wrapper:empty {
+  display: none;
+}
+
+#image-preview-wrapper img {
+  max-width: 200px;
+  height: auto;
+  border-radius: var(--border-radius-md);
+  border: 1px solid #ddd;
+  object-fit: cover;
+}

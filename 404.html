@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page Not Found - Seed & Sell</title>
+
+    <link rel="stylesheet" href="/src/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="manifest" href="/manifest.json" />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="header-left">
+          <h1><a href="/index.html" class="logo-link">Seed & Sell</a></h1>
+        </div>
+
+        <div class="header-center">
+          <nav class="nav-pills-container">
+            <a href="/index.html?cat=produce" class="nav-pill active">
+              <i class="fa-solid fa-carrot"></i> Produce
+            </a>
+            <a href="/index.html?cat=inputs" class="nav-pill">
+              <i class="fa-solid fa-sack-xmark"></i> Inputs
+            </a>
+            <a href="/index.html?cat=services" class="nav-pill">
+              <i class="fa-solid fa-tractor"></i> Services
+            </a>
+          </nav>
+        </div>
+
+        <div class="header-right">
+          <a href="/messages.html" class="action-icon" aria-label="Messages">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span id="notification-bubble" class="notification-bubble"></span>
+          </a>
+
+          <div id="header-auth-section">
+            <a href="/auth.html" class="login-link">Login</a>
+          </div>
+
+          <a href="/dashboard.html?tab=form-panel" class="btn-sell">
+            <i class="fa-solid fa-plus"></i> Sell
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div
+        class="dashboard-card"
+        style="max-width: 600px; margin: 4rem auto; text-align: center"
+      >
+        <h2 style="font-size: 2.5rem; color: #689f38">404</h2>
+        <h1 style="font-size: 1.8rem; margin-bottom: 1rem">Page Not Found</h1>
+        <p style="font-size: 1.1rem; margin-bottom: 2rem">
+          Sorry, we couldn't find the page you were looking for. It might have
+          been moved or deleted.
+        </p>
+        <a href="/index.html" class="btn btn-primary">Go Back Home</a>
+      </div>
+    </main>
+
+    <nav class="mobile-bottom-nav">
+      <a href="/index.html" class="nav-item">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+
+      <a href="/index.html#marketplace-container" class="nav-item">
+        <i class="fa-solid fa-store"></i>
+        <span>Market</span>
+      </a>
+
+      <a
+        href="/dashboard.html?tab=form-panel"
+        class="nav-item nav-cta-item protected-link"
+      >
+        <div class="cta-icon"><i class="fa-solid fa-plus"></i></div>
+        <span>Sell</span>
+      </a>
+
+      <a href="/messages.html" class="nav-item protected-link">
+        <div class="icon-container">
+          <i class="fa-solid fa-comment-dots"></i>
+          <span id="bottom-nav-bubble" class="notification-bubble"></span>
+        </div>
+        <span>Chat</span>
+      </a>
+
+      <button
+        id="mobile-menu-btn"
+        class="nav-item"
+        style="background: none; border: none; padding: 0; font-family: inherit"
+      >
+        <i class="fa-solid fa-bars"></i>
+        <span>Menu</span>
+      </button>
+    </nav>
+
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay">
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header">
+          <h3 id="menu-user-name">Welcome, Guest</h3>
+          <button id="close-menu-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="mobile-menu-scroll">
+          <div class="menu-section">
+            <h4 class="menu-label">My Account</h4>
+            <a
+              href="/auth.html"
+              id="menu-auth-link"
+              class="menu-link highlight"
+            >
+              <i class="fa-solid fa-right-to-bracket"></i> Login / Sign Up
+            </a>
+          </div>
+
+          <div class="menu-section">
+            <h4 class="menu-label">Marketplace Categories</h4>
+            <a href="/index.html?cat=produce" class="menu-link">
+              <i class="fa-solid fa-carrot"></i> Buy Produce
+            </a>
+            <a href="/index.html?cat=inputs" class="menu-link">
+              <i class="fa-solid fa-sack-xmark"></i> Buy Inputs
+              (Seeds/Fertilizer)
+            </a>
+            <a href="/index.html?cat=services" class="menu-link">
+              <i class="fa-solid fa-tractor"></i> Hire Services
+            </a>
+          </div>
+
+          <div class="menu-section">
+            <h4 class="menu-label">Programs & Support</h4>
+            <a href="/program.html" class="menu-link">
+              <i class="fa-solid fa-file-signature"></i> Contract Farming
+            </a>
+            <a href="/contact.html" class="menu-link">
+              <i class="fa-solid fa-headset"></i> Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="/index.html">Home</a>
+          <a href="/program.html">Contract Program</a>
+          <a href="/contact.html">Contact Us</a>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 Seed & Sell. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

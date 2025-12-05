@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seed & Sell - Dashboard</title>
+
+    <link
+      rel="preconnect"
+      href="https://jupbwnbhxirfvsmrqiko.supabase.co"
+      crossorigin
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#689f38" />
+    <link
+      rel="apple-touch-icon"
+      href="/images/icons/apple-touch-icon-180x180.png"
+    />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Seed & Sell" />
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/service-worker.js");
+        });
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/app-ClOTn-KD.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/app-BseB9LUr.css">
+    <link rel="stylesheet" crossorigin href="/assets/_responsive-CJEJXemm.css">
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="header-left">
+          <h1><a href="/index.html" class="logo-link">Seed & Sell</a></h1>
+        </div>
+
+        <div class="header-center">
+          <nav class="nav-pills-container">
+            <a href="/index.html?cat=produce" class="nav-pill active">
+              <i class="fa-solid fa-carrot"></i> Produce
+            </a>
+            <a href="/index.html?cat=inputs" class="nav-pill">
+              <i class="fa-solid fa-sack-xmark"></i> Inputs
+            </a>
+            <a href="/index.html?cat=services" class="nav-pill">
+              <i class="fa-solid fa-tractor"></i> Services
+            </a>
+          </nav>
+        </div>
+
+        <div class="header-right">
+          <a href="/messages.html" class="action-icon" aria-label="Messages">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span id="notification-bubble" class="notification-bubble"></span>
+          </a>
+
+          <div id="header-auth-section">
+            <a href="/auth.html" class="login-link">Login</a>
+          </div>
+
+          <a href="/dashboard.html?tab=form-panel" class="btn-sell">
+            <i class="fa-solid fa-plus"></i> Sell
+          </a>
+        </div>
+      </div>
+    </header>
+    <main class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <nav class="dashboard-nav">
+          <a
+            href="#profile"
+            class="dashboard-nav-link"
+            data-panel="profile-panel"
+            ><i class="fa-solid fa-user icon"></i>My Profile</a
+          >
+          <a
+            href="#my-listings"
+            class="dashboard-nav-link"
+            data-panel="listings-panel"
+            ><i class="fa-solid fa-list-check icon"></i>My Listings</a
+          >
+          <a href="#post-new" class="dashboard-nav-link" data-panel="form-panel"
+            ><i class="fa-solid fa-square-plus icon"></i>Post New Listing</a
+          >
+        </nav>
+      </aside>
+
+      <section class="dashboard-content">
+        <div id="profile-panel" class="dashboard-panel">
+          <div class="dashboard-card">
+            <h2><i class="fa-solid fa-user-pen icon"></i> My Profile</h2>
+            <p>Your information as it appears to buyers.</p>
+            <form id="profile-form">
+              <div class="form-group">
+                <label for="profile-name">Full Name</label>
+                <input type="text" id="profile-name" required />
+              </div>
+              <div class="form-group">
+                <label for="profile-phone">Phone Number</label>
+                <input type="tel" id="profile-phone" required />
+              </div>
+              <div class="form-group">
+                <label for="profile-location">Location</label>
+                <input type="text" id="profile-location" required />
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="profile-submit-btn"
+              >
+                Update Profile
+              </button>
+              <p id="profile-message"></p>
+            </form>
+          </div>
+        </div>
+
+        <div id="listings-panel" class="dashboard-panel">
+          <div class="dashboard-card">
+            <h2>
+              <i class="fa-solid fa-list-check icon"></i>My Active Listings
+            </h2>
+            <div id="my-listings-grid">
+              <p id="my-listings-loading">Loading your listings...</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="form-panel" class="dashboard-panel">
+          <div class="dashboard-card">
+            <h2 id="form-title">
+              <i class="fa-solid fa-square-plus icon"></i>Post a New Listing
+            </h2>
+            <form id="listing-form">
+              <input type="hidden" id="listing-id" />
+
+              <div class="form-row" style="display: flex; gap: 1rem">
+                <div class="form-group" style="flex: 1">
+                  <label for="product-category">Category</label>
+                  <select id="product-category" required>
+                    <option value="" disabled selected>
+                      -- Select Category --
+                    </option>
+                    <option value="produce">Farm Produce</option>
+                    <option value="inputs">Farm Inputs</option>
+                    <option value="services">Farm Services</option>
+                  </select>
+                </div>
+                <div class="form-group" style="flex: 1">
+                  <label for="product-subcategory">Type / Sub-Category</label>
+                  <select id="product-subcategory" required disabled>
+                    <option value="" disabled selected>
+                      -- Select Category First --
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="product-name"
+                  >Title / Name (e.g. "Road Runner Chickens")</label
+                >
+                <input type="text" id="product-name" required />
+              </div>
+
+              <div class="form-row" style="display: flex; gap: 1rem">
+                <div class="form-group" style="flex: 1">
+                  <label for="product-price">Price ($)</label>
+                  <input
+                    type="number"
+                    id="product-price"
+                    placeholder="e.g., 15"
+                    step="0.01"
+                    required
+                  />
+                </div>
+                <div class="form-group" style="flex: 1">
+                  <label id="quantity-label" for="product-quantity"
+                    >Quantity (Crates)</label
+                  >
+                  <input
+                    type="number"
+                    id="product-quantity"
+                    placeholder="e.g., 50"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="product-location">Location / Area</label>
+                <input type="text" id="product-location" required />
+              </div>
+              <div class="form-group">
+                <label for="product-description">Description</label>
+                <textarea id="product-description" rows="4"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="product-image">Image</label>
+                <input
+                  type="file"
+                  id="product-image"
+                  accept="image/png, image/jpeg"
+                />
+              </div>
+              <div id="image-preview-wrapper"></div>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="submit-listing-btn"
+              >
+                Post Listing
+              </button>
+              <p id="listing-message"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="mobile-bottom-nav">
+      <a href="/index.html" class="nav-item">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+
+      <a href="/index.html#marketplace-container" class="nav-item">
+        <i class="fa-solid fa-store"></i>
+        <span>Market</span>
+      </a>
+
+      <a
+        href="/dashboard.html?tab=form-panel"
+        class="nav-item nav-cta-item protected-link"
+      >
+        <div class="cta-icon">
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <span>Sell</span>
+      </a>
+
+      <a href="/messages.html" class="nav-item protected-link">
+        <div class="icon-container">
+          <i class="fa-solid fa-comment-dots"></i>
+          <span id="bottom-nav-bubble" class="notification-bubble"></span>
+        </div>
+        <span>Chat</span>
+      </a>
+
+      <button
+        id="mobile-menu-btn"
+        class="nav-item"
+        style="background: none; border: none; padding: 0; font-family: inherit"
+      >
+        <i class="fa-solid fa-bars"></i>
+        <span>Menu</span>
+      </button>
+    </nav>
+
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay">
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header">
+          <h3 id="menu-user-name">Welcome, Guest</h3>
+          <button id="close-menu-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="mobile-menu-scroll">
+          <div class="menu-section">
+            <h4 class="menu-label">My Account</h4>
+            <a
+              href="/auth.html"
+              id="menu-auth-link"
+              class="menu-link highlight"
+            >
+              <i class="fa-solid fa-right-to-bracket"></i> Login / Sign Up
+            </a>
+          </div>
+
+          <div class="menu-section">
+            <h4 class="menu-label">Marketplace Categories</h4>
+            <a href="/index.html?cat=produce" class="menu-link">
+              <i class="fa-solid fa-carrot"></i> Buy Produce
+            </a>
+            <a href="/index.html?cat=inputs" class="menu-link">
+              <i class="fa-solid fa-sack-xmark"></i> Buy Inputs
+              (Seeds/Fertilizer)
+            </a>
+            <a href="/index.html?cat=services" class="menu-link">
+              <i class="fa-solid fa-tractor"></i> Hire Services
+            </a>
+          </div>
+
+          <div class="menu-section">
+            <h4 class="menu-label">Programs & Support</h4>
+            <a href="/program.html" class="menu-link">
+              <i class="fa-solid fa-file-signature"></i> Contract Farming
+            </a>
+            <a href="/contact.html" class="menu-link">
+              <i class="fa-solid fa-headset"></i> Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="logout-modal" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Log Out</h2>
+        <p>Are you sure you want to log out?</p>
+        <div class="modal-actions">
+          <button id="logout-cancel-btn" class="btn">Cancel</button>
+          <button id="logout-confirm-btn" class="btn btn-danger">
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="/index.html">Home</a>
+          <a href="/program.html">Contract Program</a>
+          <a href="/contact.html">Contact Us</a>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 Seed & Sell. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </body>
+</html>

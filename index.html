@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seed & Sell</title>
+
+    <link
+      rel="preconnect"
+      href="https://jupbwnbhxirfvsmrqiko.supabase.co"
+      crossorigin
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/src/css/_base.css" />
+    <link rel="stylesheet" href="/src/css/_header.css" />
+    <link rel="stylesheet" href="/src/css/_footer.css" />
+    <link rel="stylesheet" href="/src/css/_forms.css" />
+    <link rel="stylesheet" href="/src/css/_listings.css" />
+    <link rel="stylesheet" href="/src/css/_dashboard.css" />
+    <link rel="stylesheet" href="/src/css/_chat.css" />
+    <link rel="stylesheet" href="/src/css/_components.css" />
+    <link rel="stylesheet" href="/src/css/_toggle.css" />
+    <link rel="stylesheet" href="/src/css/_modal.css" />
+    <link rel="stylesheet" href="/src/css/_responsive.css" />
+    <link rel="stylesheet" href="/src/css/styles.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#689f38" />
+    <link
+      rel="apple-touch-icon"
+      href="/images/icons/apple-touch-icon-180x180.png"
+    />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Seed & Sell" />
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/service-worker.js");
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="header-left">
+          <h1><a href="/index.html" class="logo-link">Seed & Sell</a></h1>
+        </div>
+
+        <div class="header-center">
+          <nav class="nav-pills-container">
+            <a href="/index.html?cat=produce" class="nav-pill active">
+              <i class="fa-solid fa-carrot"></i> Produce
+            </a>
+            <a href="/index.html?cat=inputs" class="nav-pill">
+              <i class="fa-solid fa-sack-xmark"></i> Inputs
+            </a>
+            <a href="/index.html?cat=services" class="nav-pill">
+              <i class="fa-solid fa-tractor"></i> Services
+            </a>
+          </nav>
+        </div>
+
+        <div class="header-right">
+          <a href="/messages.html" class="action-icon" aria-label="Messages">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span id="notification-bubble" class="notification-bubble"></span>
+          </a>
+
+          <div id="header-auth-section">
+            <a href="/auth.html" class="login-link">Login</a>
+          </div>
+
+          <a href="/dashboard.html?tab=form-panel" class="btn-sell">
+            <i class="fa-solid fa-plus"></i> Sell
+          </a>
+        </div>
+      </div>
+    </header>
+    <main class="hero">
+      <div class="hero-content">
+        <div class="hero-text-column">
+          <h2>Connect Directly with Farmers and Buyers.</h2>
+          <p>Fresh produce from the farm, straight to you. No middle-man.</p>
+          <div class="hero-actions" id="hero-actions">
+            <a href="#marketplace-container" class="btn btn-primary"
+              >Browse Listings</a
+            >
+            <a href="/auth.html" class="btn">Become a Seller</a>
+          </div>
+        </div>
+
+        <div class="hero-logo-column">
+          <img
+            src="/images/logo.webp"
+            alt="Seed & Sell Logo"
+            class="hero-logo"
+          />
+        </div>
+      </div>
+    </main>
+
+    <section class="promo-section fade-in-section">
+      <div class="b2b-cta">
+        <div class="cta-column">
+          <h3>
+            <i class="fa-solid fa-truck-ramp-box icon"></i>Are You a Large-Scale
+            Buyer?
+          </h3>
+          <p>
+            Need a reliable, large-volume supply of produce? Our core company
+            offers bulk contracts for supermarkets, processors, and exporters.
+          </p>
+          <a href="/contact.html" class="btn">Contact Sales</a>
+        </div>
+        <div class="cta-column">
+          <h3><i class="fa-solid fa-tractor icon"></i>Are You a Farmer?</h3>
+          <p>
+            Tired of finding buyers? Join our Contract Program. We supply the
+            seed and guarantee to buy 100% of your harvest. Click to learn more.
+          </p>
+          <a href="/program.html" class="btn btn-primary">Join Our Program</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container fade-in-section" id="marketplace-container">
+      <div class="search-container">
+        <form id="search-form" class="search-form">
+          <div class="input-group">
+            <i class="fa-solid fa-magnifying-glass input-icon"></i>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search produce (e.g. Tomatoes)..."
+              aria-label="Search produce"
+            />
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-location-dot input-icon"></i>
+            <select id="location-input" aria-label="Filter by location">
+              <option value="">All Locations</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+      </div>
+      <div class="marketplace-toggle-wrapper">
+        <div class="marketplace-toggle">
+          <div class="toggle-option active" data-target="peer-listings">
+            Peer-to-Peer
+          </div>
+          <div class="toggle-option" data-target="featured-listings">
+            Bulk Supply
+          </div>
+          <div class="toggle-slider"></div>
+        </div>
+
+        <div class="marketplace-content-slider">
+          <div class="marketplace-content-wrapper">
+            <div class="marketplace-grid" id="peer-listings">
+              <h2 class="grid-title">Peer-to-Peer Marketplace</h2>
+              <p>
+                See what's fresh from the farm. Contact the farmer directly to
+                buy.
+              </p>
+              <div id="listings-grid-content">
+                <p id="loading-message">Loading listings...</p>
+              </div>
+
+              <div class="load-more-container">
+                <button id="load-more-btn" class="btn" style="display: none">
+                  Load More
+                </button>
+              </div>
+            </div>
+
+            <div class="marketplace-grid" id="featured-listings">
+              <h2 class="grid-title">Featured Bulk Supply</h2>
+              <p>Large-volume contracts offered directly by our company.</p>
+              <div id="featured-listings-grid">
+                <p id="featured-loading-message">
+                  Loading featured listings...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="mobile-bottom-nav">
+      <a href="/index.html" class="nav-item">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+
+      <a href="/index.html#marketplace-container" class="nav-item">
+        <i class="fa-solid fa-store"></i>
+        <span>Market</span>
+      </a>
+
+      <a
+        href="/dashboard.html?tab=form-panel"
+        class="nav-item nav-cta-item protected-link"
+      >
+        <div class="cta-icon">
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <span>Sell</span>
+      </a>
+
+      <a href="/messages.html" class="nav-item protected-link">
+        <div class="icon-container">
+          <i class="fa-solid fa-comment-dots"></i>
+          <span id="bottom-nav-bubble" class="notification-bubble"></span>
+        </div>
+        <span>Chat</span>
+      </a>
+
+      <button
+        id="mobile-menu-btn"
+        class="nav-item"
+        style="background: none; border: none; padding: 0; font-family: inherit"
+      >
+        <i class="fa-solid fa-bars"></i>
+        <span>Menu</span>
+      </button>
+    </nav>
+
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay">
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header">
+          <h3 id="menu-user-name">Welcome, Guest</h3>
+          <button id="close-menu-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="mobile-menu-scroll">
+          <div class="menu-section">
+            <h4 class="menu-label">My Account</h4>
+            <a
+              href="/auth.html"
+              id="menu-auth-link"
+              class="menu-link highlight"
+            >
+              <i class="fa-solid fa-right-to-bracket"></i> Login / Sign Up
+            </a>
+          </div>
+
+          <div class="menu-section">
+            <h4 class="menu-label">Marketplace Categories</h4>
+            <a href="/index.html?cat=produce" class="menu-link">
+              <i class="fa-solid fa-carrot"></i> Buy Produce
+            </a>
+            <a href="/index.html?cat=inputs" class="menu-link">
+              <i class="fa-solid fa-sack-xmark"></i> Buy Inputs
+              (Seeds/Fertilizer)
+            </a>
+            <a href="/index.html?cat=services" class="menu-link">
+              <i class="fa-solid fa-tractor"></i> Hire Services
+            </a>
+          </div>
+
+          <div class="menu-section">
+            <h4 class="menu-label">Programs & Support</h4>
+            <a href="/program.html" class="menu-link">
+              <i class="fa-solid fa-file-signature"></i> Contract Farming
+            </a>
+            <a href="/contact.html" class="menu-link">
+              <i class="fa-solid fa-headset"></i> Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="logout-modal" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Log Out</h2>
+        <p>Are you sure you want to log out?</p>
+        <div class="modal-actions">
+          <button id="logout-cancel-btn" class="btn">Cancel</button>
+          <button id="logout-confirm-btn" class="btn btn-danger">
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="/index.html">Home</a>
+          <a href="/program.html">Contract Program</a>
+          <a href="/contact.html">Contact Us</a>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 Seed & Sell. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+/* --- MAIN STYLESHEET --- */
+/* Note: Imports moved to HTML for performance */
+
+/* 1. Global Variables */
+:root {
+  /* Brand Colors */
+  --primary-color: #689f38; /* Official Green */
+  --primary-color-hover: #558b2f; /* Darker Green for hover */
+  --secondary-color: #e8f5e9; /* Light Green background */
+  --danger-color: #d9534f; /* Red for delete/logout */
+  --danger-color-hover: #c9302c;
+
+  /* Typography & Layout */
+  --font-family: "Poppins", sans-serif;
+  --border-radius-md: 8px;
+  --border-radius-sm: 4px;
+  --max-width: 1200px;
+
+  /* Colors */
+  --text-main: #333;
+  --text-muted: #555;
+  --text-light: #777;
+  --bg-main: #f4f4f4;
+  --bg-white: #fff;
+  --border-color: #ddd;
+
+  /* Effects */
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --box-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
