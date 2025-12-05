@@ -28,27 +28,70 @@ let currentCategory = "produce"; // Default category
 let hasMoreListings = true;
 
 // --- CONFIG: Page Themes & Content ---
+// ★ CHANGE IMAGE PATHS HERE IF YOU USE JPG/PNG ★
 const CATEGORY_CONFIG = {
   produce: {
-    theme: "theme-produce", // Uses default green styles (or explicit class)
+    theme: "theme-produce",
     title: "Connect Directly with Farmers.",
     desc: "Fresh produce from the farm, straight to you. No middle-man.",
     btnText: "Browse Produce",
     unitDefault: "crate",
+    promo: {
+      bgImage: "/images/field.webp",
+      left: {
+        title:
+          '<i class="fa-solid fa-truck-ramp-box icon"></i>Are You a Large-Scale Buyer?',
+        desc: "Need a reliable, large-volume supply of produce? Our core company offers bulk contracts for supermarkets and exporters.",
+        btn: "Contact Sales",
+      },
+      right: {
+        title: '<i class="fa-solid fa-tractor icon"></i>Are You a Farmer?',
+        desc: "Tired of finding buyers? Join our Contract Program. We supply the seed and guarantee to buy 100% of your harvest.",
+        btn: "Join Our Program",
+      },
+    },
   },
   inputs: {
-    theme: "theme-inputs", // Slate/Gray
+    theme: "theme-inputs",
     title: "Quality Farm Inputs & Seeds.",
     desc: "Find fertilizer, seeds, and chemicals from trusted suppliers near you.",
     btnText: "Browse Inputs",
-    unitDefault: "bag", // or unit
+    unitDefault: "bag",
+    promo: {
+      bgImage: "/images/promo-inputs.webp", // <--- Change this to .jpg if needed
+      left: {
+        title: '<i class="fa-solid fa-shop icon"></i>Looking for Bulk Inputs?',
+        desc: "We supply large-scale commercial farms with fertilizer, chemicals, and seed at wholesale prices.",
+        btn: "Get a Quote",
+      },
+      right: {
+        title:
+          '<i class="fa-solid fa-hand-holding-dollar icon"></i>Are You a Supplier?',
+        desc: "Expand your customer base. List your agro-chemicals and seeds directly to thousands of farmers.",
+        btn: "Start Selling Inputs",
+      },
+    },
   },
   services: {
-    theme: "theme-services", // Ocean Blue
+    theme: "theme-services",
     title: "Hire Reliable Farm Services.",
     desc: "Tractors, transport, and veterinary services on demand.",
     btnText: "Find Services",
-    unitDefault: "job", // or hour
+    unitDefault: "job",
+    promo: {
+      bgImage: "/images/promo-services.webp", // <--- Change this to .jpg if needed
+      left: {
+        title:
+          '<i class="fa-solid fa-clipboard-list icon"></i>Need Contract Work Done?',
+        desc: "From ploughing to harvesting, find reliable service providers with verified ratings.",
+        btn: "Post a Job",
+      },
+      right: {
+        title: '<i class="fa-solid fa-wrench icon"></i>Own a Tractor or Truck?',
+        desc: "Don't let your machinery sit idle. List your services and get hired by farmers in your area.",
+        btn: "List Your Service",
+      },
+    },
   },
 };
 
@@ -188,13 +231,12 @@ export async function initListingsPage() {
 }
 
 /**
- * Updates the visual theme and Hero text based on currentCategory
+ * Updates the visual theme, Hero text, AND Promo Section based on currentCategory
  */
 function applyCategoryTheme() {
   const config = CATEGORY_CONFIG[currentCategory];
 
-  // 1. Apply Body Class for Color Theme (overrides CSS variables)
-  // Remove existing theme classes first
+  // 1. Apply Body Class for Color Theme
   document.body.classList.remove(
     "theme-produce",
     "theme-inputs",
@@ -207,7 +249,6 @@ function applyCategoryTheme() {
   // 2. Update Header Navigation Pills (Active State)
   document.querySelectorAll(".nav-pill").forEach((pill) => {
     pill.classList.remove("active");
-    // Check if the pill's href matches the current category
     if (pill.href.includes(`cat=${currentCategory}`)) {
       pill.classList.add("active");
     }
@@ -221,6 +262,32 @@ function applyCategoryTheme() {
   if (titleEl) titleEl.textContent = config.title;
   if (descEl) descEl.textContent = config.desc;
   if (btnEl) btnEl.textContent = config.btnText;
+
+  // 4. Update Promo Section (Background & Text)
+  const promoSection = document.getElementById("promo-section");
+
+  if (promoSection && config.promo) {
+    // Change Background Image
+    promoSection.style.backgroundImage = `url('${config.promo.bgImage}')`;
+
+    // Update Left Card
+    const leftTitle = document.getElementById("promo-left-title");
+    const leftDesc = document.getElementById("promo-left-desc");
+    const leftBtn = document.getElementById("promo-left-btn");
+
+    if (leftTitle) leftTitle.innerHTML = config.promo.left.title;
+    if (leftDesc) leftDesc.textContent = config.promo.left.desc;
+    if (leftBtn) leftBtn.textContent = config.promo.left.btn;
+
+    // Update Right Card
+    const rightTitle = document.getElementById("promo-right-title");
+    const rightDesc = document.getElementById("promo-right-desc");
+    const rightBtn = document.getElementById("promo-right-btn");
+
+    if (rightTitle) rightTitle.innerHTML = config.promo.right.title;
+    if (rightDesc) rightDesc.textContent = config.promo.right.desc;
+    if (rightBtn) rightBtn.textContent = config.promo.right.btn;
+  }
 }
 
 async function loadLocationDropdown() {
