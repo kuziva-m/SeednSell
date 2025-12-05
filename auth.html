@@ -206,42 +206,7 @@
       <p id="auth-message"></p>
     </main>
 
-    <nav class="mobile-bottom-nav">
-      <a href="/index.html" class="nav-item">
-        <i class="fa-solid fa-house"></i>
-        <span>Home</span>
-      </a>
-
-      <a href="/index.html#marketplace-container" class="nav-item">
-        <i class="fa-solid fa-store"></i>
-        <span>Market</span>
-      </a>
-
-      <a
-        href="/dashboard.html?tab=form-panel"
-        class="nav-item nav-cta-item protected-link"
-      >
-        <div class="cta-icon"><i class="fa-solid fa-plus"></i></div>
-        <span>Sell</span>
-      </a>
-
-      <a href="/messages.html" class="nav-item protected-link">
-        <div class="icon-container">
-          <i class="fa-solid fa-comment-dots"></i>
-          <span id="bottom-nav-bubble" class="notification-bubble"></span>
-        </div>
-        <span>Chat</span>
-      </a>
-
-      <button
-        id="mobile-menu-btn"
-        class="nav-item"
-        style="background: none; border: none; padding: 0; font-family: inherit"
-      >
-        <i class="fa-solid fa-bars"></i>
-        <span>Menu</span>
-      </button>
-    </nav>
+    <nav class="mobile-bottom-nav" id="global-mobile-nav"></nav>
 
     <div id="mobile-menu-overlay" class="mobile-menu-overlay">
       <div class="mobile-menu-content">
@@ -302,18 +267,7 @@
       </div>
     </div>
 
-    <footer>
-      <div class="footer-container">
-        <div class="footer-links">
-          <a href="/index.html">Home</a>
-          <a href="/program.html">Contract Program</a>
-          <a href="/contact.html">Contact Us</a>
-        </div>
-        <div class="footer-copyright">
-          &copy; 2025 Seed & Sell. All rights reserved.
-        </div>
-      </div>
-    </footer>
+    <footer id="global-footer"></footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="/src/js/app.js"></script>
