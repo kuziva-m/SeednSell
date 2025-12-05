@@ -14,8 +14,8 @@ const listingDetailContainer = document.getElementById(
 
 // Search & Pagination Elements
 const searchForm = document.getElementById("search-form");
-const searchInput = document.getElementById("search-input"); // NEW
-const locationInput = document.getElementById("location-input"); // NEW
+const searchInput = document.getElementById("search-input");
+const locationInput = document.getElementById("location-input");
 const loadMoreBtn = document.getElementById("load-more-btn");
 const breadcrumbContainer = document.getElementById("breadcrumb-container");
 
@@ -24,7 +24,33 @@ let currentPage = 0;
 const ITEMS_PER_PAGE = 8;
 let currentSearchQuery = "";
 let currentLocationQuery = "";
+let currentCategory = "produce"; // Default category
 let hasMoreListings = true;
+
+// --- CONFIG: Page Themes & Content ---
+const CATEGORY_CONFIG = {
+  produce: {
+    theme: "theme-produce", // Uses default green styles (or explicit class)
+    title: "Connect Directly with Farmers.",
+    desc: "Fresh produce from the farm, straight to you. No middle-man.",
+    btnText: "Browse Produce",
+    unitDefault: "crate",
+  },
+  inputs: {
+    theme: "theme-inputs", // Slate/Gray
+    title: "Quality Farm Inputs & Seeds.",
+    desc: "Find fertilizer, seeds, and chemicals from trusted suppliers near you.",
+    btnText: "Browse Inputs",
+    unitDefault: "bag", // or unit
+  },
+  services: {
+    theme: "theme-services", // Ocean Blue
+    title: "Hire Reliable Farm Services.",
+    desc: "Tractors, transport, and veterinary services on demand.",
+    btnText: "Find Services",
+    unitDefault: "job", // or hour
+  },
+};
 
 // --- Helper: Debounce Function (Real-Time Search) ---
 function debounce(func, wait) {
@@ -86,20 +112,35 @@ function renderEmptyState(
 // --- Initialization ---
 export async function initListingsPage() {
   if (!listingsGrid) return;
-  console.log("Fetching listings...");
 
+  // 1. Detect Category from URL (e.g., index.html?cat=inputs)
+  const params = new URLSearchParams(window.location.search);
+  const catParam = params.get("cat");
+
+  // Validate category, fallback to 'produce' if missing or invalid
+  if (catParam && CATEGORY_CONFIG[catParam]) {
+    currentCategory = catParam;
+  } else {
+    currentCategory = "produce";
+  }
+
+  console.log(`Initializing listings for category: ${currentCategory}`);
+
+  // 2. Apply Theme & Hero Content
+  applyCategoryTheme();
+
+  // 3. Load Filters & Data
   loadLocationDropdown();
 
   if (featuredGrid) {
     loadFeaturedListings();
   }
 
-  // ★★★ NEW: Real-Time Search Listener ★★★
+  // Real-Time Search Listener
   const performSearch = debounce(() => {
     const productQuery = searchInput.value.trim();
     const locationQuery = locationInput.value;
 
-    // Only search if changed
     if (
       productQuery === currentSearchQuery &&
       locationQuery === currentLocationQuery
@@ -123,12 +164,11 @@ export async function initListingsPage() {
       }
       loadFeaturedListings();
     }
-  }, 350); // Wait 350ms after user stops typing
+  }, 350);
 
   if (searchInput) searchInput.addEventListener("input", performSearch);
   if (locationInput) locationInput.addEventListener("change", performSearch);
 
-  // Keep form submit just in case (prevent reload)
   if (searchForm) {
     searchForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -136,7 +176,6 @@ export async function initListingsPage() {
     });
   }
 
-  // Attach Load More Listener
   if (loadMoreBtn) {
     loadMoreBtn.addEventListener("click", () => {
       currentPage++;
@@ -144,7 +183,44 @@ export async function initListingsPage() {
     });
   }
 
+  // Initial Fetch
   fetchPeerListings();
+}
+
+/**
+ * Updates the visual theme and Hero text based on currentCategory
+ */
+function applyCategoryTheme() {
+  const config = CATEGORY_CONFIG[currentCategory];
+
+  // 1. Apply Body Class for Color Theme (overrides CSS variables)
+  // Remove existing theme classes first
+  document.body.classList.remove(
+    "theme-produce",
+    "theme-inputs",
+    "theme-services"
+  );
+  if (config.theme) {
+    document.body.classList.add(config.theme);
+  }
+
+  // 2. Update Header Navigation Pills (Active State)
+  document.querySelectorAll(".nav-pill").forEach((pill) => {
+    pill.classList.remove("active");
+    // Check if the pill's href matches the current category
+    if (pill.href.includes(`cat=${currentCategory}`)) {
+      pill.classList.add("active");
+    }
+  });
+
+  // 3. Update Hero Section Text
+  const titleEl = document.getElementById("hero-title");
+  const descEl = document.getElementById("hero-desc");
+  const btnEl = document.getElementById("hero-browse-btn");
+
+  if (titleEl) titleEl.textContent = config.title;
+  if (descEl) descEl.textContent = config.desc;
+  if (btnEl) btnEl.textContent = config.btnText;
 }
 
 async function loadLocationDropdown() {
@@ -158,6 +234,9 @@ async function loadLocationDropdown() {
     return;
   }
 
+  // Clear existing options except the first one
+  locationSelect.innerHTML = '<option value="">All Locations</option>';
+
   locations.forEach((item) => {
     if (item.location && item.location.trim() !== "") {
       const option = document.createElement("option");
@@ -169,7 +248,7 @@ async function loadLocationDropdown() {
 }
 
 /**
- * Fetch Peer Listings with Pagination & Search & Skeletons
+ * Fetch Peer Listings with Pagination, Search & Category Filter
  */
 async function fetchPeerListings() {
   if (!hasMoreListings) return;
@@ -186,10 +265,12 @@ async function fetchPeerListings() {
   const from = currentPage * ITEMS_PER_PAGE;
   const to = from + ITEMS_PER_PAGE - 1;
 
+  // Build Query
   let query = sb
     .from("listings")
     .select(`*, profiles ( full_name )`)
     .neq("farmer_id", CONFIG.COMPANY_USER_ID)
+    .eq("category", currentCategory) // ★ Filter by Category ★
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -220,19 +301,18 @@ async function fetchPeerListings() {
     listingsGrid.innerHTML = "";
   }
 
-  // ★★★ NEW: Handle Visual Empty State ★★★
+  // Handle Empty State
   if (data.length === 0 && currentPage === 0) {
     if (loadingMessage) loadingMessage.style.display = "none";
 
     renderEmptyState(
       listingsGrid,
-      "No produce found",
+      `No ${currentCategory} found`,
       "We couldn't find exactly what you're looking for. Try a different search term or location.",
       "Clear Filters",
       () => {
         searchInput.value = "";
         locationInput.value = "";
-        // Manually trigger the input event to reset search
         searchInput.dispatchEvent(new Event("input"));
       }
     );
@@ -248,14 +328,18 @@ async function fetchPeerListings() {
     if (loadMoreBtn) loadMoreBtn.style.display = "block";
   }
 
-  displayListings(data, listingsGrid, null, "");
+  displayListings(data, listingsGrid, null);
 }
 
+/**
+ * Fetch Featured Listings (B2B/Bulk) filtered by Category
+ */
 async function loadFeaturedListings() {
   let query = sb
     .from("listings")
     .select(`*, profiles ( full_name )`)
     .eq("farmer_id", CONFIG.COMPANY_USER_ID)
+    .eq("category", currentCategory) // ★ Filter by Category ★
     .order("created_at", { ascending: false });
 
   if (currentSearchQuery) {
@@ -270,25 +354,23 @@ async function loadFeaturedListings() {
   if (error) {
     featuredLoading.textContent = `Error loading featured listings.`;
   } else {
-    // ★★★ NEW: Handle Featured Empty State ★★★
     if (data.length === 0) {
       if (featuredLoading) featuredLoading.style.display = "none";
       renderEmptyState(
         featuredGrid,
-        "No bulk supply",
-        "Our core company has no bulk contracts available matching your criteria."
+        "No featured items",
+        `Our core company has no bulk ${currentCategory} contracts available right now.`
       );
     } else {
-      displayListings(data, featuredGrid, featuredLoading, "");
+      displayListings(data, featuredGrid, featuredLoading);
     }
   }
 }
 
-function displayListings(listings, gridElement, loadingElement, emptyMessage) {
+function displayListings(listings, gridElement, loadingElement) {
   if (loadingElement) loadingElement.style.display = "none";
 
   listings.forEach((listing) => {
-    // Semantic HTML
     const card = document.createElement("article");
     card.className = "listing-card fade-in-section is-visible";
 
@@ -297,8 +379,6 @@ function displayListings(listings, gridElement, loadingElement, emptyMessage) {
     link.className = "listing-card-link";
 
     const img = document.createElement("img");
-
-    // Meta Optimization: Lazy Loading
     img.loading = "lazy";
     img.decoding = "async";
 
@@ -322,7 +402,7 @@ function displayListings(listings, gridElement, loadingElement, emptyMessage) {
           img.src = listing.main_image_url;
         }
       } catch (e) {
-        img.src = "/images/logo.webp"; // Fallback to logo if error
+        img.src = "/images/logo.webp";
       }
     } else {
       img.src = "/images/logo.webp";
@@ -338,7 +418,12 @@ function displayListings(listings, gridElement, loadingElement, emptyMessage) {
 
     const price = document.createElement("p");
     price.className = "price";
-    price.textContent = `$${listing.price} / crate`;
+
+    // ★ Dynamic Unit Display ★
+    const config =
+      CATEGORY_CONFIG[currentCategory] || CATEGORY_CONFIG["produce"];
+    const unit = config.unitDefault;
+    price.textContent = `$${listing.price} / ${unit}`;
 
     const location = document.createElement("p");
     location.className = "location";
@@ -358,6 +443,7 @@ function displayListings(listings, gridElement, loadingElement, emptyMessage) {
   });
 }
 
+// --- Listing Detail Page Logic ---
 export async function initListingDetailPage() {
   if (!listingDetailContainer) return;
   const params = new URLSearchParams(window.location.search);
@@ -378,8 +464,16 @@ export async function initListingDetailPage() {
 
   if (data) {
     document.title = `${data.product_name} - Seed & Sell`;
+
+    // Determine context for breadcrumbs & units
+    const cat = data.category || "produce";
+    const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG["produce"];
+    const unit = config.unitDefault;
+
     if (breadcrumbContainer) {
-      breadcrumbContainer.innerHTML = `<a href="index.html">Home</a> &gt; <a href="index.html#marketplace-container">Marketplace</a> &gt; <span class="current">${data.product_name}</span>`;
+      breadcrumbContainer.innerHTML = `<a href="index.html?cat=${cat}">Home</a> &gt; <a href="index.html?cat=${cat}#marketplace-container">${
+        cat.charAt(0).toUpperCase() + cat.slice(1)
+      }</a> &gt; <span class="current">${data.product_name}</span>`;
     }
     const currentUserId = getCurrentUserId();
     const isOwner = currentUserId && currentUserId === data.farmer_id;
@@ -390,7 +484,6 @@ export async function initListingDetailPage() {
     const img = document.createElement("img");
     img.id = "listing-image";
 
-    // Image Handling with Transform
     if (data.main_image_url) {
       try {
         const imagePath = data.main_image_url.split(
@@ -423,14 +516,14 @@ export async function initListingDetailPage() {
     title.textContent = data.product_name;
     const price = document.createElement("p");
     price.id = "listing-price";
-    price.textContent = `$${data.price} / crate`;
+    price.textContent = `$${data.price} / ${unit}`;
 
     const metaGroup = document.createElement("div");
     metaGroup.className = "listing-meta-group";
     metaGroup.innerHTML = `
       <p class="listing-meta-item"><i class="fa-solid fa-cubes"></i> <span><strong>Available:</strong> ${
         data.quantity_available || "Not specified"
-      } crates</span></p>
+      } ${unit}s</span></p>
       <p class="listing-meta-item"><i class="fa-solid fa-location-dot"></i> <span><strong>Location:</strong> ${
         data.location
       }</span></p>
@@ -451,7 +544,7 @@ export async function initListingDetailPage() {
     listingSidebar.className = "listing-detail-sidebar";
     const farmerCard = document.createElement("div");
     farmerCard.className = "farmer-details-card";
-    farmerCard.innerHTML = `<h3>Farmer Details</h3><p class="listing-meta-item"><i class="fa-solid fa-user"></i> <span><strong>Contact:</strong> ${
+    farmerCard.innerHTML = `<h3>Seller Details</h3><p class="listing-meta-item"><i class="fa-solid fa-user"></i> <span><strong>Contact:</strong> ${
       data.profiles?.full_name || "Unknown"
     }</span></p>`;
 
@@ -464,12 +557,15 @@ export async function initListingDetailPage() {
     } else {
       const chatBtn = document.createElement("button");
       chatBtn.className = "btn btn-primary btn-full-width";
-      chatBtn.textContent = "Chat with Farmer";
+      chatBtn.textContent = "Chat with Seller";
       chatBtn.onclick = () => {
         const user = getUserProfile();
         if (!user) return alert("Please log in as a Buyer to chat.");
-        if (user.user_role === "farmer")
+        if (user.user_role === "farmer" && cat === "produce") {
+          // Optional: Restrict farmers buying from farmers only for Produce
+          // For Inputs/Services, farmers usually BUY, so we allow it.
           return alert("Farmers cannot chat with other farmers.");
+        }
         handleStartChat(data.profiles.id, getCurrentUserId());
       };
       farmerCard.appendChild(chatBtn);

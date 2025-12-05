@@ -28,3 +28,18 @@
   --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   --box-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
+/* Add this to the bottom of src/css/styles.css */
+
+/* Default is Green (Produce), these override it */
+
+body.theme-inputs {
+  --primary-color: #546e7a; /* Slate Gray */
+  --primary-color-hover: #455a64;
+  --secondary-color: #eceff1;
+}
+
+body.theme-services {
+  --primary-color: #0288d1; /* Professional Blue */
+  --primary-color-hover: #0277bd;
+  --secondary-color: #e1f5fe;
+}
