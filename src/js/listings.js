@@ -31,7 +31,7 @@ let hasMoreListings = true;
 const CATEGORY_CONFIG = {
   produce: {
     theme: "theme-produce",
-    title: "Phase 1: Recruiting Producers!",
+    title: "Recruiting Producers!",
     desc: "We are verifying farmers now. Register to have your produce listed here when we launch.",
     btnText: "Register Now",
     unitDefault: "crate",
@@ -41,7 +41,7 @@ const CATEGORY_CONFIG = {
         title:
           '<i class="fa-solid fa-truck-ramp-box icon"></i>Are You a Large-Scale Buyer?',
         desc: "Secure your supply chain early. Contract farmers before the harvest season begins.",
-        btn: "Contact Sales",
+        btn: "+263 78 514 1781", // WhatsApp Number
       },
       right: {
         title: '<i class="fa-solid fa-tractor icon"></i>Are You a Farmer?',
@@ -61,7 +61,7 @@ const CATEGORY_CONFIG = {
       left: {
         title: '<i class="fa-solid fa-shop icon"></i>Bulk Orders Coming Soon',
         desc: "We are aggregating orders from our farmers. Be the first supplier they call.",
-        btn: "Partner With Us",
+        btn: "+263 78 514 1781", // WhatsApp Number
       },
       right: {
         title:
@@ -82,7 +82,7 @@ const CATEGORY_CONFIG = {
       left: {
         title: '<i class="fa-solid fa-clipboard-list icon"></i>Need Work Done?',
         desc: "We are building a database of verified service providers. Check back soon.",
-        btn: "Learn More",
+        btn: "+263 78 514 1781", // WhatsApp Number
       },
       right: {
         title: '<i class="fa-solid fa-wrench icon"></i>List Your Machinery',
@@ -280,7 +280,18 @@ function applyCategoryTheme() {
 
     if (leftTitle) leftTitle.innerHTML = config.promo.left.title;
     if (leftDesc) leftDesc.textContent = config.promo.left.desc;
-    if (leftBtn) leftBtn.textContent = config.promo.left.btn;
+    if (leftBtn) {
+      leftBtn.textContent = config.promo.left.btn;
+      // Check if the button text is the specific number to make it a link
+      if (config.promo.left.btn.includes("+263")) {
+        leftBtn.href = "https://wa.me/263785141781";
+        leftBtn.target = "_blank";
+      } else {
+        // Fallback for other buttons if any
+        leftBtn.href = "/contact.html";
+        leftBtn.target = "";
+      }
+    }
 
     const rightTitle = document.getElementById("promo-right-title");
     const rightDesc = document.getElementById("promo-right-desc");

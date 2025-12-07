@@ -41,6 +41,7 @@
       rel="apple-touch-icon"
       href="/images/icons/apple-touch-icon-180x180.png"
     />
+    <link rel="icon" href="/images/icons/apple-touch-icon-180x180.png" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
@@ -57,6 +58,7 @@
   </head>
   <body>
     <header id="global-header"></header>
+
     <main class="dashboard-layout">
       <aside class="dashboard-sidebar">
         <nav class="dashboard-nav">
@@ -97,12 +99,13 @@
           "
         >
           <h3 style="color: #ef6c00; margin-bottom: 0.5rem">
-            <i class="fa-solid fa-circle-exclamation"></i> Verification Required
+            <i class="fa-solid fa-circle-exclamation"></i> Verification Pending
           </h3>
           <p style="margin-bottom: 1rem; color: #333">
-            To ensure safety, all new sellers must be verified before their
-            listings appear to the public. Please send a WhatsApp message to our
-            admin with your name and location to get verified.
+            Our team will
+            <strong>automatically contact you via WhatsApp</strong> shortly to
+            verify your account details. <br />If you want to speed up the
+            process, you can message us directly below.
           </p>
           <a
             href="https://wa.me/263785141781?text=Hello%2C%20I%20just%20signed%20up%20on%20Seed%20%26%20Sell.%20Please%20verify%20my%20account."
@@ -110,7 +113,7 @@
             class="btn btn-primary"
             style="background-color: #25d366; border-color: #25d366"
           >
-            <i class="fa-brands fa-whatsapp"></i> Verify via WhatsApp
+            <i class="fa-brands fa-whatsapp"></i> Verify Now
           </a>
         </div>
 
@@ -246,53 +249,7 @@
     </main>
 
     <nav class="mobile-bottom-nav" id="global-mobile-nav"></nav>
-
-    <div id="mobile-menu-overlay" class="mobile-menu-overlay">
-      <div class="mobile-menu-content">
-        <div class="mobile-menu-header">
-          <h3 id="menu-user-name">Welcome, Guest</h3>
-          <button id="close-menu-btn"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <div class="mobile-menu-scroll">
-          <div class="menu-section">
-            <h4 class="menu-label">My Account</h4>
-            <a
-              href="/auth.html"
-              id="menu-auth-link"
-              class="menu-link highlight"
-            >
-              <i class="fa-solid fa-right-to-bracket"></i> Login / Sign Up
-            </a>
-          </div>
-
-          <div class="menu-section">
-            <h4 class="menu-label">Marketplace Categories</h4>
-            <a href="/index.html?cat=produce" class="menu-link">
-              <i class="fa-solid fa-carrot"></i> Buy Produce
-            </a>
-            <a href="/index.html?cat=inputs" class="menu-link">
-              <i class="fa-solid fa-sack-xmark"></i> Buy Inputs
-              (Seeds/Fertilizer)
-            </a>
-            <a href="/index.html?cat=services" class="menu-link">
-              <i class="fa-solid fa-tractor"></i> Hire Services
-            </a>
-          </div>
-
-          <div class="menu-section">
-            <h4 class="menu-label">Programs & Support</h4>
-            <a href="/program.html" class="menu-link">
-              <i class="fa-solid fa-file-signature"></i> Contract Farming
-            </a>
-            <a href="/contact.html" class="menu-link">
-              <i class="fa-solid fa-headset"></i> Contact Us
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
     <div id="logout-modal" class="modal-overlay">
       <div class="modal-content">
         <h2>Log Out</h2>
@@ -305,7 +262,6 @@
         </div>
       </div>
     </div>
-
     <footer id="global-footer"></footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

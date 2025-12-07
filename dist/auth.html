@@ -29,6 +29,7 @@
       rel="apple-touch-icon"
       href="/images/icons/apple-touch-icon-180x180.png"
     />
+    <link rel="icon" href="/images/icons/apple-touch-icon-180x180.png" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
@@ -42,47 +43,13 @@
         });
       }
     </script>
-    <script type="module" crossorigin src="/assets/app-BoeFsb_1.js"></script>
+    <script type="module" crossorigin src="/assets/app-S9jSOIUJ.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/app-DpiimEyn.css">
     <link rel="stylesheet" crossorigin href="/assets/_responsive-DJgoSp8k.css">
   </head>
   <body>
-    <header>
-      <div class="header-container">
-        <div class="header-left">
-          <h1><a href="/index.html" class="logo-link">Seed & Sell</a></h1>
-        </div>
+    <header id="global-header"></header>
 
-        <div class="header-center">
-          <nav class="nav-pills-container">
-            <a href="/index.html?cat=produce" class="nav-pill active">
-              <i class="fa-solid fa-carrot"></i> Produce
-            </a>
-            <a href="/index.html?cat=inputs" class="nav-pill">
-              <i class="fa-solid fa-sack-xmark"></i> Inputs
-            </a>
-            <a href="/index.html?cat=services" class="nav-pill">
-              <i class="fa-solid fa-tractor"></i> Services
-            </a>
-          </nav>
-        </div>
-
-        <div class="header-right">
-          <a href="/messages.html" class="action-icon" aria-label="Messages">
-            <i class="fa-regular fa-comment-dots"></i>
-            <span id="notification-bubble" class="notification-bubble"></span>
-          </a>
-
-          <div id="header-auth-section">
-            <a href="/auth.html" class="login-link">Login</a>
-          </div>
-
-          <a href="/dashboard.html?tab=form-panel" class="btn-sell">
-            <i class="fa-solid fa-plus"></i> Sell
-          </a>
-        </div>
-      </div>
-    </header>
     <main class="auth-container">
       <div class="auth-form" id="signup-card">
         <h2>Create Your Account</h2>
@@ -170,6 +137,20 @@
             />
           </div>
           <button type="submit" class="btn btn-primary">Sign Up</button>
+
+          <p
+            style="
+              font-size: 0.9rem;
+              color: #666;
+              margin-top: 10px;
+              text-align: center;
+              line-height: 1.4;
+            "
+          >
+            <i class="fa-brands fa-whatsapp" style="color: #25d366"></i>
+            <strong>Note:</strong> After signing up, our verification team will
+            automatically contact you via WhatsApp.
+          </p>
         </form>
         <p class="auth-toggle">
           Already have an account?
@@ -198,53 +179,7 @@
     </main>
 
     <nav class="mobile-bottom-nav" id="global-mobile-nav"></nav>
-
-    <div id="mobile-menu-overlay" class="mobile-menu-overlay">
-      <div class="mobile-menu-content">
-        <div class="mobile-menu-header">
-          <h3 id="menu-user-name">Welcome, Guest</h3>
-          <button id="close-menu-btn"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <div class="mobile-menu-scroll">
-          <div class="menu-section">
-            <h4 class="menu-label">My Account</h4>
-            <a
-              href="/auth.html"
-              id="menu-auth-link"
-              class="menu-link highlight"
-            >
-              <i class="fa-solid fa-right-to-bracket"></i> Login / Sign Up
-            </a>
-          </div>
-
-          <div class="menu-section">
-            <h4 class="menu-label">Marketplace Categories</h4>
-            <a href="/index.html?cat=produce" class="menu-link">
-              <i class="fa-solid fa-carrot"></i> Buy Produce
-            </a>
-            <a href="/index.html?cat=inputs" class="menu-link">
-              <i class="fa-solid fa-sack-xmark"></i> Buy Inputs
-              (Seeds/Fertilizer)
-            </a>
-            <a href="/index.html?cat=services" class="menu-link">
-              <i class="fa-solid fa-tractor"></i> Hire Services
-            </a>
-          </div>
-
-          <div class="menu-section">
-            <h4 class="menu-label">Programs & Support</h4>
-            <a href="/program.html" class="menu-link">
-              <i class="fa-solid fa-file-signature"></i> Contract Farming
-            </a>
-            <a href="/contact.html" class="menu-link">
-              <i class="fa-solid fa-headset"></i> Contact Us
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
     <div id="logout-modal" class="modal-overlay">
       <div class="modal-content">
         <h2>Log Out</h2>
@@ -257,7 +192,6 @@
         </div>
       </div>
     </div>
-
     <footer id="global-footer"></footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
