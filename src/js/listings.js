@@ -106,7 +106,7 @@ const MOCK_LISTINGS = [
   {
     id: "mock-2",
     product_name: "Choice Maize (Example)",
-    price: 320,
+    price: 5,
     location: "Bindura",
     main_image_url: null,
     category: "produce",
