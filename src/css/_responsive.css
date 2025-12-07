@@ -1,57 +1,79 @@
+/* src/css/_responsive.css */
+
+/* Switch to Mobile View earlier (900px) to accommodate the new wider Desktop Header */
 @media (max-width: 900px) {
   /* --- 1. HEADER ADJUSTMENTS --- */
+  /* Make the container a flex row to hold Logo + Pills inline */
   .header-container {
-    display: flex; /* Ensure flex behavior */
-    justify-content: space-between;
+    display: flex;
+    justify-content: flex-start; /* Align start to keep logo left */
     align-items: center;
     padding: 0 1rem;
+    gap: 1rem; /* Space between logo and buttons */
+    overflow: hidden; /* Prevent layout breakage */
+    height: 60px; /* Reduce height specifically for mobile */
+  }
+
+  header {
+    height: 60px; /* Match container height */
   }
 
   header h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem; /* Slightly smaller logo to save space */
+    white-space: nowrap; /* Keep logo on one line */
+    flex-shrink: 0; /* Prevent logo from squishing */
+    line-height: 1;
+  }
+
+  .logo-link {
+    font-size: 1.2rem;
   }
 
   /* Hide Desktop-Specific Zones */
-  /* .center-nav, */ /* REMOVED THIS to unhide nav pills */
   .header-right {
     display: none !important;
   }
 
-  /* ★ UN-HIDE CENTER NAV (Pills) ★ */
+  /* ★ COMPACT INLINE NAV (Side-by-Side) ★ */
   .header-center {
     display: flex !important;
-    position: absolute;
-    top: 70px; /* Push below header */
-    left: 0;
-    width: 100%;
-    overflow-x: auto; /* Allow scrolling */
-    padding: 10px;
-    background: #fff;
-    justify-content: flex-start; /* Align left so they scroll nicely */
-    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    position: static; /* Remove absolute positioning */
+    width: auto; /* Take up remaining space */
+    flex-grow: 1; /* Expand to fill space */
+    overflow-x: auto; /* Enable horizontal scroll */
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    justify-content: flex-start;
+    align-items: center;
+
+    /* Hide scrollbars for a clean look */
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Hide scrollbar Firefox */
-  }
-  .header-center::-webkit-scrollbar {
-    display: none; /* Hide scrollbar Chrome/Safari */
+    scrollbar-width: none; /* Firefox */
   }
 
-  /* Ensure pills don't wrap */
+  .header-center::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
   .nav-pills-container {
     flex-wrap: nowrap;
-    width: max-content; /* Let it expand */
     border: none;
     background: transparent;
-    gap: 10px;
+    gap: 8px;
+    padding: 0;
+    padding-right: 1rem; /* Buffer at the end of scroll */
   }
 
-  /* Make pills smaller on mobile */
+  /* Make pills smaller and compact */
   .nav-pill {
-    padding: 6px 14px;
-    font-size: 0.85rem;
+    padding: 5px 12px;
+    font-size: 0.75rem;
     border: 1px solid #eee;
     background: #f9f9f9;
     white-space: nowrap;
+    margin: 0; /* Remove default margins if any */
+    height: 32px; /* Fixed height for consistency */
   }
 
   /* Hide the top hamburger menu (we use the Bottom Bar "Menu" tab) */
@@ -69,7 +91,7 @@
     flex-direction: column-reverse;
     text-align: center;
     padding: 1rem;
-    margin-top: 40px; /* Push hero down because of mobile nav pills */
+    margin-top: 0; /* RESET MARGIN: No longer needed as header is single row */
   }
 
   .hero-logo-column {
@@ -78,6 +100,7 @@
 
   .hero-logo {
     max-width: 200px;
+    margin-bottom: 1rem;
   }
 
   .hero-text-column {
