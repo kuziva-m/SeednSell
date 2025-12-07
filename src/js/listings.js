@@ -27,73 +27,123 @@ let currentLocationQuery = "";
 let currentCategory = "produce"; // Default category
 let hasMoreListings = true;
 
-// --- CONFIG: Page Themes & Content ---
-// ★ CHANGE IMAGE PATHS HERE IF YOU USE JPG/PNG ★
+// --- CONFIG: Page Themes & Content (PHASE 1 RECRUITMENT) ---
 const CATEGORY_CONFIG = {
   produce: {
     theme: "theme-produce",
-    title: "Connect Directly with Farmers.",
-    desc: "Fresh produce from the farm, straight to you. No middle-man.",
-    btnText: "Browse Produce",
+    title: "Phase 1: Recruiting Producers!",
+    desc: "We are verifying farmers now. Register to have your produce listed here when we launch.",
+    btnText: "Register Now",
     unitDefault: "crate",
     promo: {
       bgImage: "/images/field.webp",
       left: {
         title:
           '<i class="fa-solid fa-truck-ramp-box icon"></i>Are You a Large-Scale Buyer?',
-        desc: "Need a reliable, large-volume supply of produce? Our core company offers bulk contracts for supermarkets and exporters.",
+        desc: "Secure your supply chain early. Contract farmers before the harvest season begins.",
         btn: "Contact Sales",
       },
       right: {
         title: '<i class="fa-solid fa-tractor icon"></i>Are You a Farmer?',
-        desc: "Tired of finding buyers? Join our Contract Program. We supply the seed and guarantee to buy 100% of your harvest.",
+        desc: "Don't get left behind. Join our Contract Program and get verified today.",
         btn: "Join Our Program",
       },
     },
   },
   inputs: {
     theme: "theme-inputs",
-    title: "Quality Farm Inputs & Seeds.",
-    desc: "Find fertilizer, seeds, and chemicals from trusted suppliers near you.",
-    btnText: "Browse Inputs",
+    title: "Recruiting Input Suppliers.",
+    desc: "Do you sell fertilizer, seeds, or chemicals? Register now to reach thousands of farmers.",
+    btnText: "Register as Supplier",
     unitDefault: "bag",
     promo: {
-      bgImage: "/images/promo-inputs.jpg", // <--- Change this to .jpg if needed
+      bgImage: "/images/promo-inputs.jpg",
       left: {
-        title: '<i class="fa-solid fa-shop icon"></i>Looking for Bulk Inputs?',
-        desc: "We supply large-scale commercial farms with fertilizer, chemicals, and seed at wholesale prices.",
-        btn: "Get a Quote",
+        title: '<i class="fa-solid fa-shop icon"></i>Bulk Orders Coming Soon',
+        desc: "We are aggregating orders from our farmers. Be the first supplier they call.",
+        btn: "Partner With Us",
       },
       right: {
         title:
-          '<i class="fa-solid fa-hand-holding-dollar icon"></i>Are You a Supplier?',
-        desc: "Expand your customer base. List your agro-chemicals and seeds directly to thousands of farmers.",
-        btn: "Start Selling Inputs",
+          '<i class="fa-solid fa-hand-holding-dollar icon"></i>Sell Your Inputs',
+        desc: "Create your verified profile today so you are ready when the season starts.",
+        btn: "Register Now",
       },
     },
   },
   services: {
     theme: "theme-services",
-    title: "Hire Reliable Farm Services.",
-    desc: "Tractors, transport, and veterinary services on demand.",
-    btnText: "Find Services",
+    title: "Recruiting Service Providers.",
+    desc: "Tractor owners, transporters, and vets: Get verified now to receive job alerts.",
+    btnText: "Register Service",
     unitDefault: "job",
     promo: {
-      bgImage: "/images/promo-services.jpg", // <--- Change this to .jpg if needed
+      bgImage: "/images/promo-services.jpg",
       left: {
-        title:
-          '<i class="fa-solid fa-clipboard-list icon"></i>Need Contract Work Done?',
-        desc: "From ploughing to harvesting, find reliable service providers with verified ratings.",
-        btn: "Post a Job",
+        title: '<i class="fa-solid fa-clipboard-list icon"></i>Need Work Done?',
+        desc: "We are building a database of verified service providers. Check back soon.",
+        btn: "Learn More",
       },
       right: {
-        title: '<i class="fa-solid fa-wrench icon"></i>Own a Tractor or Truck?',
-        desc: "Don't let your machinery sit idle. List your services and get hired by farmers in your area.",
-        btn: "List Your Service",
+        title: '<i class="fa-solid fa-wrench icon"></i>List Your Machinery',
+        desc: "Turn your idle equipment into cash. Register your tractor or truck today.",
+        btn: "Register Now",
       },
     },
   },
 };
+
+// --- MOCK DATA FOR PHASE 1 ---
+const MOCK_LISTINGS = [
+  {
+    id: "mock-1",
+    product_name: "Fresh Tomatoes (Example)",
+    price: 15,
+    location: "Harare",
+    main_image_url: null, // Will fallback to logo
+    category: "produce",
+  },
+  {
+    id: "mock-2",
+    product_name: "Choice Maize (Example)",
+    price: 320,
+    location: "Bindura",
+    main_image_url: null,
+    category: "produce",
+  },
+  {
+    id: "mock-3",
+    product_name: "Compound D Fertilizer (Example)",
+    price: 38,
+    location: "Msasa",
+    main_image_url: null,
+    category: "inputs",
+  },
+  {
+    id: "mock-4",
+    product_name: "Tractor Ploughing (Example)",
+    price: 90,
+    location: "Marondera",
+    main_image_url: null,
+    category: "services",
+  },
+  {
+    id: "mock-5",
+    product_name: "Road Runner Chickens (Example)",
+    price: 6,
+    location: "Gweru",
+    main_image_url: null,
+    category: "produce",
+  },
+  {
+    id: "mock-6",
+    product_name: "Veterinary Services (Example)",
+    price: 50,
+    location: "Bulawayo",
+    main_image_url: null,
+    category: "services",
+  },
+];
 
 // --- Helper: Debounce Function (Real-Time Search) ---
 function debounce(func, wait) {
@@ -156,11 +206,10 @@ function renderEmptyState(
 export async function initListingsPage() {
   if (!listingsGrid) return;
 
-  // 1. Detect Category from URL (e.g., index.html?cat=inputs)
   const params = new URLSearchParams(window.location.search);
   const catParam = params.get("cat");
 
-  // Validate category, fallback to 'produce' if missing or invalid
+  // Validate category, fallback to 'produce'
   if (catParam && CATEGORY_CONFIG[catParam]) {
     currentCategory = catParam;
   } else {
@@ -169,65 +218,22 @@ export async function initListingsPage() {
 
   console.log(`Initializing listings for category: ${currentCategory}`);
 
-  // 2. Apply Theme & Hero Content
+  // 1. Apply Theme & Hero Content
   applyCategoryTheme();
 
-  // 3. Load Filters & Data
+  // 2. Load Filters (Dummy for now)
   loadLocationDropdown();
 
+  // 3. Load Featured (Dummy for now)
   if (featuredGrid) {
     loadFeaturedListings();
   }
 
-  // Real-Time Search Listener
-  const performSearch = debounce(() => {
-    const productQuery = searchInput.value.trim();
-    const locationQuery = locationInput.value;
+  // 4. Load Main Listings (MOCK DATA)
+  renderMockListings();
 
-    if (
-      productQuery === currentSearchQuery &&
-      locationQuery === currentLocationQuery
-    )
-      return;
-
-    currentSearchQuery = productQuery;
-    currentLocationQuery = locationQuery;
-
-    currentPage = 0;
-    hasMoreListings = true;
-    if (loadMoreBtn) loadMoreBtn.style.display = "none";
-
-    fetchPeerListings();
-
-    if (featuredGrid) {
-      featuredGrid.innerHTML = "";
-      if (featuredLoading) {
-        featuredLoading.style.display = "block";
-        featuredLoading.textContent = "Searching bulk supply...";
-      }
-      loadFeaturedListings();
-    }
-  }, 350);
-
-  if (searchInput) searchInput.addEventListener("input", performSearch);
-  if (locationInput) locationInput.addEventListener("change", performSearch);
-
-  if (searchForm) {
-    searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      performSearch();
-    });
-  }
-
-  if (loadMoreBtn) {
-    loadMoreBtn.addEventListener("click", () => {
-      currentPage++;
-      fetchPeerListings();
-    });
-  }
-
-  // Initial Fetch
-  fetchPeerListings();
+  // Note: We disabled the real-time search listeners for Phase 1 because
+  // we are only showing a static list of examples.
 }
 
 /**
@@ -236,7 +242,7 @@ export async function initListingsPage() {
 function applyCategoryTheme() {
   const config = CATEGORY_CONFIG[currentCategory];
 
-  // 1. Apply Body Class for Color Theme
+  // Apply Body Class
   document.body.classList.remove(
     "theme-produce",
     "theme-inputs",
@@ -246,7 +252,7 @@ function applyCategoryTheme() {
     document.body.classList.add(config.theme);
   }
 
-  // 2. Update Header Navigation Pills (Active State)
+  // Update Header Navigation
   document.querySelectorAll(".nav-pill").forEach((pill) => {
     pill.classList.remove("active");
     if (pill.href.includes(`cat=${currentCategory}`)) {
@@ -254,7 +260,7 @@ function applyCategoryTheme() {
     }
   });
 
-  // 3. Update Hero Section Text
+  // Update Hero Section
   const titleEl = document.getElementById("hero-title");
   const descEl = document.getElementById("hero-desc");
   const btnEl = document.getElementById("hero-browse-btn");
@@ -263,14 +269,11 @@ function applyCategoryTheme() {
   if (descEl) descEl.textContent = config.desc;
   if (btnEl) btnEl.textContent = config.btnText;
 
-  // 4. Update Promo Section (Background & Text)
+  // Update Promo Section
   const promoSection = document.getElementById("promo-section");
-
   if (promoSection && config.promo) {
-    // Change Background Image
     promoSection.style.backgroundImage = `url('${config.promo.bgImage}')`;
 
-    // Update Left Card
     const leftTitle = document.getElementById("promo-left-title");
     const leftDesc = document.getElementById("promo-left-desc");
     const leftBtn = document.getElementById("promo-left-btn");
@@ -279,7 +282,6 @@ function applyCategoryTheme() {
     if (leftDesc) leftDesc.textContent = config.promo.left.desc;
     if (leftBtn) leftBtn.textContent = config.promo.left.btn;
 
-    // Update Right Card
     const rightTitle = document.getElementById("promo-right-title");
     const rightDesc = document.getElementById("promo-right-desc");
     const rightBtn = document.getElementById("promo-right-btn");
@@ -293,224 +295,94 @@ function applyCategoryTheme() {
 async function loadLocationDropdown() {
   const locationSelect = document.getElementById("location-input");
   if (!locationSelect) return;
-
-  const { data: locations, error } = await sb.rpc("get_distinct_locations");
-
-  if (error) {
-    console.error("Error fetching locations:", error);
-    return;
-  }
-
-  // Clear existing options except the first one
+  // Phase 1: Keep location dummy
   locationSelect.innerHTML = '<option value="">All Locations</option>';
-
-  locations.forEach((item) => {
-    if (item.location && item.location.trim() !== "") {
-      const option = document.createElement("option");
-      option.value = item.location;
-      option.textContent = item.location;
-      locationSelect.appendChild(option);
-    }
-  });
 }
 
 /**
- * Fetch Peer Listings with Pagination, Search & Category Filter
+ * PHASE 1: Renders Hardcoded Examples
  */
-async function fetchPeerListings() {
-  if (!hasMoreListings) return;
+function renderMockListings() {
+  if (loadingMessage) loadingMessage.style.display = "none";
+  if (loadMoreBtn) loadMoreBtn.style.display = "none";
 
-  if (loadMoreBtn) loadMoreBtn.disabled = true;
+  // Filter mocks by category
+  const filteredMocks = MOCK_LISTINGS.filter(
+    (item) => item.category === currentCategory
+  );
 
-  if (currentPage === 0) {
-    if (loadingMessage) loadingMessage.style.display = "none";
-    renderSkeletons(listingsGrid, 4);
-  } else {
-    if (loadMoreBtn) loadMoreBtn.textContent = "Loading...";
-  }
-
-  const from = currentPage * ITEMS_PER_PAGE;
-  const to = from + ITEMS_PER_PAGE - 1;
-
-  // Build Query
-  let query = sb
-    .from("listings")
-    .select(`*, profiles ( full_name )`)
-    .neq("farmer_id", CONFIG.COMPANY_USER_ID)
-    .eq("category", currentCategory) // ★ Filter by Category ★
-    .order("created_at", { ascending: false })
-    .range(from, to);
-
-  if (currentSearchQuery) {
-    query = query.ilike("product_name", `%${currentSearchQuery}%`);
-  }
-  if (currentLocationQuery) {
-    query = query.eq("location", currentLocationQuery);
-  }
-
-  const { data, error } = await query;
-
-  if (loadMoreBtn) {
-    loadMoreBtn.textContent = "Load More";
-    loadMoreBtn.disabled = false;
-  }
-
-  if (error) {
-    if (currentPage === 0) listingsGrid.innerHTML = "";
-    if (loadingMessage) {
-      loadingMessage.textContent = `Error loading listings: ${error.message}`;
-      loadingMessage.style.display = "block";
-    }
-    return;
-  }
-
-  if (currentPage === 0) {
-    listingsGrid.innerHTML = "";
-  }
-
-  // Handle Empty State
-  if (data.length === 0 && currentPage === 0) {
-    if (loadingMessage) loadingMessage.style.display = "none";
-
+  if (filteredMocks.length === 0) {
     renderEmptyState(
       listingsGrid,
-      `No ${currentCategory} found`,
-      "We couldn't find exactly what you're looking for. Try a different search term or location.",
-      "Clear Filters",
-      () => {
-        searchInput.value = "";
-        locationInput.value = "";
-        searchInput.dispatchEvent(new Event("input"));
-      }
+      "No Examples Yet",
+      "Check back soon as we verify our first partners."
     );
-
-    if (loadMoreBtn) loadMoreBtn.style.display = "none";
     return;
   }
 
-  if (data.length < ITEMS_PER_PAGE) {
-    hasMoreListings = false;
-    if (loadMoreBtn) loadMoreBtn.style.display = "none";
-  } else {
-    if (loadMoreBtn) loadMoreBtn.style.display = "block";
-  }
+  listingsGrid.innerHTML = "";
 
-  displayListings(data, listingsGrid, null);
-}
-
-/**
- * Fetch Featured Listings (B2B/Bulk) filtered by Category
- */
-async function loadFeaturedListings() {
-  let query = sb
-    .from("listings")
-    .select(`*, profiles ( full_name )`)
-    .eq("farmer_id", CONFIG.COMPANY_USER_ID)
-    .eq("category", currentCategory) // ★ Filter by Category ★
-    .order("created_at", { ascending: false });
-
-  if (currentSearchQuery) {
-    query = query.ilike("product_name", `%${currentSearchQuery}%`);
-  }
-  if (currentLocationQuery) {
-    query = query.eq("location", currentLocationQuery);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    featuredLoading.textContent = `Error loading featured listings.`;
-  } else {
-    if (data.length === 0) {
-      if (featuredLoading) featuredLoading.style.display = "none";
-      renderEmptyState(
-        featuredGrid,
-        "No featured items",
-        `Our core company has no bulk ${currentCategory} contracts available right now.`
-      );
-    } else {
-      displayListings(data, featuredGrid, featuredLoading);
-    }
-  }
-}
-
-function displayListings(listings, gridElement, loadingElement) {
-  if (loadingElement) loadingElement.style.display = "none";
-
-  listings.forEach((listing) => {
+  filteredMocks.forEach((item) => {
     const card = document.createElement("article");
     card.className = "listing-card fade-in-section is-visible";
 
+    // Clicking card goes to AUTH, not listing detail
     const link = document.createElement("a");
-    link.href = `listing.html?id=${listing.id}`;
+    link.href = "/auth.html";
     link.className = "listing-card-link";
 
     const img = document.createElement("img");
-    img.loading = "lazy";
-    img.decoding = "async";
-
-    if (listing.main_image_url) {
-      try {
-        const imagePath = listing.main_image_url.split(
-          `/${CONFIG.IMAGES.BUCKET}/`
-        )[1];
-        if (imagePath) {
-          const { data: publicUrlData } = sb.storage
-            .from(CONFIG.IMAGES.BUCKET)
-            .getPublicUrl(imagePath, {
-              transform: {
-                width: 400,
-                height: 300,
-                resize: "cover",
-              },
-            });
-          img.src = publicUrlData.publicUrl;
-        } else {
-          img.src = listing.main_image_url;
-        }
-      } catch (e) {
-        img.src = "/images/logo.webp";
-      }
-    } else {
-      img.src = "/images/logo.webp";
-    }
-
-    img.alt = listing.product_name;
+    img.src = "/images/logo.webp"; // Using logo as placeholder
+    img.alt = item.product_name;
+    img.style.objectFit = "contain";
+    img.style.padding = "20px";
+    img.style.backgroundColor = "#f9f9f9";
 
     const contentDiv = document.createElement("div");
     contentDiv.className = "listing-card-content";
 
     const title = document.createElement("h3");
-    title.textContent = listing.product_name;
+    title.textContent = item.product_name;
 
     const price = document.createElement("p");
     price.className = "price";
+    const config = CATEGORY_CONFIG[currentCategory];
+    price.textContent = `$${item.price} / ${config.unitDefault}`;
 
-    // ★ Dynamic Unit Display ★
-    const config =
-      CATEGORY_CONFIG[currentCategory] || CATEGORY_CONFIG["produce"];
-    const unit = config.unitDefault;
-    price.textContent = `$${listing.price} / ${unit}`;
+    // ★ EXAMPLE BADGE ★
+    const badge = document.createElement("div");
+    badge.style.backgroundColor = "#ffc107";
+    badge.style.color = "#333";
+    badge.style.fontSize = "0.75rem";
+    badge.style.fontWeight = "700";
+    badge.style.padding = "4px 8px";
+    badge.style.borderRadius = "4px";
+    badge.style.display = "inline-block";
+    badge.style.marginBottom = "8px";
+    badge.textContent = "EXAMPLE: Register to Feature";
 
-    const location = document.createElement("p");
-    location.className = "location";
-    const icon = document.createElement("i");
-    icon.className = "fa-solid fa-location-dot";
-    const locationText = document.createTextNode(` ${listing.location}`);
-    location.appendChild(icon);
-    location.appendChild(locationText);
-
+    contentDiv.appendChild(badge);
     contentDiv.appendChild(title);
     contentDiv.appendChild(price);
-    contentDiv.appendChild(location);
+
     link.appendChild(img);
     link.appendChild(contentDiv);
     card.appendChild(link);
-    gridElement.appendChild(card);
+    listingsGrid.appendChild(card);
   });
 }
 
-// --- Listing Detail Page Logic ---
+// Disable Featured Listings for Phase 1 or show dummy
+async function loadFeaturedListings() {
+  if (featuredLoading) featuredLoading.style.display = "none";
+  renderEmptyState(
+    featuredGrid,
+    "Bulk Supply",
+    "Recruiting verified bulk suppliers. Contact us to apply."
+  );
+}
+
+// ... (Rest of Detail Page logic remains, though it won't be reached easily in Phase 1) ...
 export async function initListingDetailPage() {
   if (!listingDetailContainer) return;
   const params = new URLSearchParams(window.location.search);
