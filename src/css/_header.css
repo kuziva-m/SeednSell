@@ -4,7 +4,7 @@
 header {
   background-color: #ffffff;
   border-bottom: 1px solid #eaeaea;
-  height: 80px; /* Taller, more premium feel */
+  height: 80px;
   position: sticky;
   top: 0;
   z-index: 900;
@@ -12,7 +12,7 @@ header {
 }
 
 header.is-scrolled {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Soft shadow on scroll */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border-bottom: none;
 }
 
@@ -22,7 +22,6 @@ header.is-scrolled {
   padding: 0 2rem;
   height: 100%;
   display: grid;
-  /* 3 Columns: Logo | Navigation | User Actions */
   grid-template-columns: 180px 1fr 280px;
   align-items: center;
 }
@@ -45,7 +44,7 @@ header.is-scrolled {
   gap: 8px;
 }
 
-/* --- 2. CENTER NAVIGATION (The Pills) --- */
+/* --- 2. CENTER NAVIGATION --- */
 .header-center {
   display: flex;
   justify-content: center;
@@ -53,9 +52,10 @@ header.is-scrolled {
 
 .nav-pills-container {
   display: flex;
-  background-color: #f7f7f7; /* Subtle grey backing */
+  background-color: #f7f7f7;
   padding: 4px;
-  border-radius: 50px;
+  /* ★ CHANGED: Squared off from 50px to 4px ★ */
+  border-radius: 4px;
   border: 1px solid #eee;
 }
 
@@ -65,7 +65,8 @@ header.is-scrolled {
   font-weight: 600;
   font-size: 0.9rem;
   padding: 8px 20px;
-  border-radius: 40px;
+  /* ★ CHANGED: Squared off from 40px to 4px ★ */
+  border-radius: 4px;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   display: flex;
   align-items: center;
@@ -82,7 +83,6 @@ header.is-scrolled {
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* Active State: Pure White with Shadow (Airbnb Style) */
 .nav-pill.active {
   background-color: #ffffff;
   color: var(--primary-color);
@@ -101,7 +101,6 @@ header.is-scrolled {
   gap: 1.5rem;
 }
 
-/* Messages Icon */
 .action-icon {
   position: relative;
   color: #555;
@@ -115,7 +114,6 @@ header.is-scrolled {
   color: var(--primary-color);
 }
 
-/* User Profile Avatar (Logged In) */
 .user-avatar-btn {
   display: flex;
   align-items: center;
@@ -123,7 +121,8 @@ header.is-scrolled {
   text-decoration: none;
   cursor: pointer;
   padding: 4px 12px 4px 4px;
-  border-radius: 50px;
+  /* ★ CHANGED: Squared off from 50px to 4px ★ */
+  border-radius: 4px;
   border: 1px solid transparent;
   transition: all 0.2s ease;
 }
@@ -138,6 +137,7 @@ header.is-scrolled {
   height: 36px;
   background-color: var(--secondary-color);
   color: var(--primary-color);
+  /* Keep avatar circular (standard UI pattern), or change to 4px if you want square avatars too */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -156,7 +156,6 @@ header.is-scrolled {
   text-overflow: ellipsis;
 }
 
-/* Auth Links (Guest) */
 .auth-links {
   display: flex;
   align-items: center;
@@ -178,7 +177,8 @@ header.is-scrolled {
   background-color: var(--primary-color);
   color: white;
   padding: 0.6rem 1.4rem;
-  border-radius: 50px;
+  /* ★ CHANGED: Squared off from 50px to 4px ★ */
+  border-radius: 4px;
   font-weight: 700;
   text-decoration: none;
   display: flex;
@@ -197,7 +197,6 @@ header.is-scrolled {
   display: none;
 }
 
-/* Hide complex header elements on mobile/tablet */
 @media (max-width: 900px) {
   .header-container {
     display: flex;
@@ -211,6 +210,6 @@ header.is-scrolled {
   }
 
   .mobile-nav-toggle {
-    display: none !important; /* Use bottom nav on mobile */
+    display: none !important;
   }
 }
