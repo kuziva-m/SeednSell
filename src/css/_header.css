@@ -45,6 +45,11 @@ header.is-scrolled {
 }
 
 /* --- 2. CENTER NAVIGATION --- */
+/* src/css/_header.css */
+
+/* ... (Top of file remains unchanged) ... */
+
+/* --- 2. CENTER NAVIGATION --- */
 .header-center {
   display: flex;
   justify-content: center;
@@ -52,11 +57,11 @@ header.is-scrolled {
 
 .nav-pills-container {
   display: flex;
-  background-color: #f7f7f7;
+  /* ★ CHANGED: Removed background-color and border for cleaner look ★ */
+  background-color: transparent; 
   padding: 4px;
-  /* ★ CHANGED: Squared off from 50px to 4px ★ */
   border-radius: 4px;
-  border: 1px solid #eee;
+  border: none; 
 }
 
 .nav-pill {
@@ -65,12 +70,13 @@ header.is-scrolled {
   font-weight: 600;
   font-size: 0.9rem;
   padding: 8px 20px;
-  /* ★ CHANGED: Squared off from 40px to 4px ★ */
   border-radius: 4px;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   display: flex;
   align-items: center;
   gap: 8px;
+  /* ★ NEW: Ensure transparent background by default ★ */
+  background-color: transparent;
 }
 
 .nav-pill i {
@@ -80,19 +86,24 @@ header.is-scrolled {
 
 .nav-pill:hover {
   color: var(--text-main);
-  background-color: rgba(0, 0, 0, 0.03);
+  /* ★ CHANGED: Much lighter hover state ★ */
+  background-color: #f9f9f9; 
 }
 
+/* Active State: Keep the highlight so they know where they are */
 .nav-pill.active {
-  background-color: #ffffff;
+  background-color: #ffffff; /* White card look */
   color: var(--primary-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   font-weight: 700;
+  /* Optional: Add a subtle border to define it against the white header */
+  border: 1px solid #eee;
 }
 .nav-pill.active i {
   opacity: 1;
 }
 
+/* ... (Rest of file remains unchanged) ... */
 /* --- 3. USER ACTIONS --- */
 .header-right {
   display: flex;
