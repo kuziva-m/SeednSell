@@ -240,13 +240,14 @@
   margin: 0 auto 1.5rem auto;
 }
 /* --- Hero Section (Desktop Default) --- */
+/* --- Hero Section (Desktop Default) --- */
 .hero {
-  padding: 4rem 1rem;
+  padding: 2rem 1rem; /* Reduced from 4rem to 2rem */
   background-color: var(--bg-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60vh; /* Gives it height on large screens */
+  min-height: auto; /* Removed fixed height (was 60vh) */
 }
 
 .hero-content {
