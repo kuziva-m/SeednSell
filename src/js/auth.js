@@ -16,6 +16,12 @@ export function handleAuthStateChange() {
       // ============================
       currentUserId = session.user.id;
 
+      // ★ NEW: Dispatch event to notify page logic immediately ★
+      // This replaces fragile polling in other modules
+      document.dispatchEvent(
+        new CustomEvent("auth:resolved", { detail: { userId: currentUserId } })
+      );
+
       // 1. Update Desktop Header: Show USER AVATAR + LOGOUT BUTTON
       const authSection = document.getElementById("header-auth-section");
       if (authSection) {
@@ -143,10 +149,6 @@ export function initAuthPage() {
           phone_number: phone,
           location: fullLocation, // Saving Combined Location
           user_role: role,
-          // If you have an 'entity_type' column in your DB, add: entity_type: entityType
-          // For now, we can prepend it to the name or store it if schema allows.
-          // Let's append it to full_name to be safe for display: "FARM (Company)"
-          // Or rely on future DB update.
         });
 
         if (profileError) {

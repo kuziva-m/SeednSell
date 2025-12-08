@@ -76,20 +76,28 @@ const ZIM_CATEGORIES = {
 export function initDashboardPage() {
   const currentUserId = getCurrentUserId();
 
-  // Guard: Wait for Auth
-  if (!currentUserId) {
-    setTimeout(() => {
-      if (getCurrentUserId()) initDashboardPage();
-    }, 500);
-    return;
+  // ★ REFACTORED: Event-driven initialization instead of polling loop ★
+  if (currentUserId) {
+    mountDashboard(currentUserId);
+  } else {
+    // Wait for the auth signal if not ready yet
+    document.addEventListener(
+      "auth:resolved",
+      (e) => {
+        mountDashboard(e.detail.userId);
+      },
+      { once: true }
+    );
   }
+}
 
+// Helper to load dashboard content once ID is confirmed
+function mountDashboard(currentUserId) {
   // Show Dashboard
   const layout = document.querySelector(".dashboard-layout");
   if (layout) layout.classList.add("is-ready");
 
   // ★ SHOW VERIFICATION BANNER ★
-  // For now, we show this to everyone. In the future, check profile.is_verified
   const banner = document.getElementById("verification-banner");
   if (banner) banner.style.display = "block";
 
@@ -102,7 +110,6 @@ export function initDashboardPage() {
   if (dashLogoutBtn) {
     dashLogoutBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      // Open the global logout modal
       const modal = document.getElementById("logout-modal");
       if (modal) modal.classList.add("is-visible");
     });
@@ -155,7 +162,7 @@ function handleCategoryChange() {
     subCategorySelect.disabled = false;
     config.types.forEach((type) => {
       const option = document.createElement("option");
-      option.value = type; // We store the string directly for simplicity
+      option.value = type;
       option.textContent = type;
       subCategorySelect.appendChild(option);
     });
@@ -235,9 +242,6 @@ async function handleProfileUpdate(e, currentUserId) {
 
 // --- Listing CRUD ---
 
-/**
- * Loads a listing and intelligently selects the correct category/subcategory
- */
 async function loadListingForEdit(listingId, currentUserId) {
   setListingMessage("Loading listing...", "success");
   const { data, error } = await sb
@@ -252,7 +256,6 @@ async function loadListingForEdit(listingId, currentUserId) {
     return;
   }
 
-  // Populate basic fields
   document.getElementById("listing-id").value = data.id;
   document.getElementById("product-name").value = data.product_name;
   document.getElementById("product-price").value = data.price;
@@ -260,18 +263,14 @@ async function loadListingForEdit(listingId, currentUserId) {
   document.getElementById("product-location").value = data.location;
   document.getElementById("product-description").value = data.description;
 
-  // --- NEW: Populate Categories ---
-  // 1. Set Category
+  // Set Category & Sub-category
   if (data.category && ZIM_CATEGORIES[data.category]) {
     categorySelect.value = data.category;
-    // 2. Trigger change to populate sub-categories
     handleCategoryChange();
-    // 3. Set Sub-Category (if it matches one of our types, otherwise it might be legacy data)
     if (data.sub_category) {
       subCategorySelect.value = data.sub_category;
     }
   } else {
-    // Legacy support for items created before Categories existed
     categorySelect.value = "produce";
     handleCategoryChange();
   }
@@ -320,7 +319,6 @@ async function handleListingSubmit(e, currentUserId) {
   fetchMyListings(currentUserId);
 }
 
-// --- INSERT ---
 async function handleListingInsert(e, currentUserId) {
   if (!validateForm()) return;
 
@@ -343,7 +341,7 @@ async function handleListingInsert(e, currentUserId) {
   }
 
   formData.main_image_url = imageUrl;
-  formData.farmer_id = currentUserId; // Add FK
+  formData.farmer_id = currentUserId;
 
   const { error } = await sb.from("listings").insert(formData);
 
@@ -352,7 +350,6 @@ async function handleListingInsert(e, currentUserId) {
     setListingMessage("Listing posted successfully!", "success");
     listingForm.reset();
     document.getElementById("image-preview-wrapper").innerHTML = "";
-    // Reset category dropdowns
     handleCategoryChange();
     switchTab("listings-panel");
   }
@@ -360,7 +357,6 @@ async function handleListingInsert(e, currentUserId) {
   submitListingBtn.textContent = "Post Listing";
 }
 
-// --- UPDATE ---
 async function handleListingUpdate(e, currentUserId, listingId) {
   if (!validateForm()) return;
 
@@ -388,8 +384,6 @@ async function handleListingUpdate(e, currentUserId, listingId) {
   submitListingBtn.disabled = false;
   submitListingBtn.textContent = "Update Listing";
 }
-
-// --- Helpers ---
 
 function getFormData() {
   return {
@@ -441,6 +435,13 @@ async function uploadImage(file, userId) {
 async function fetchMyListings(currentUserId) {
   if (!myListingsGrid) return;
   myListingsLoading.textContent = "Loading listings...";
+
+  // ★ CRITICAL SECURITY NOTE: ★
+  // This function MUST be guarded by Supabase RLS (Row Level Security) policies
+  // in the database. Relying on `eq('farmer_id', currentUserId)` in the client
+  // is NOT secure, as a malicious user could spoof the JS context.
+  // Ensure the policy "Users can only view/delete their own listings" is active.
+
   const { data, error } = await sb
     .from("listings")
     .select("*")
@@ -477,7 +478,6 @@ async function fetchMyListings(currentUserId) {
             }" style="flex:1;">Delete</button>
           </div>
         `;
-        // Handle Delete Logic (Simple attach)
         div
           .querySelector(".delete-btn")
           .addEventListener("click", () =>

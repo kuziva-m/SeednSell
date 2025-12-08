@@ -40,6 +40,9 @@ document.addEventListener("click", (e) => {
 
   // 1. Open Menu
   if (target && overlay) {
+    // ★ NEW: Accessibility Improvement ★
+    target.setAttribute("aria-expanded", "true");
+
     updateMenuState();
     overlay.classList.add("is-visible");
   }
@@ -47,11 +50,13 @@ document.addEventListener("click", (e) => {
   // 2. Close Menu (X button)
   if (closeBtn && overlay) {
     overlay.classList.remove("is-visible");
+    resetAriaExpanded();
   }
 
   // 3. Close Menu (Clicking Background)
   if (e.target === overlay) {
     overlay.classList.remove("is-visible");
+    resetAriaExpanded();
   }
 
   // 4. Protected Links Guard
@@ -64,6 +69,14 @@ document.addEventListener("click", (e) => {
     }
   }
 });
+
+// Helper to reset accessibility state
+function resetAriaExpanded() {
+  const toggleBtn = document.getElementById("mobile-menu-btn");
+  if (toggleBtn) {
+    toggleBtn.setAttribute("aria-expanded", "false");
+  }
+}
 
 // Updates the Mobile Menu with the user's name/state
 function updateMenuState() {
