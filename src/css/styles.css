@@ -36,18 +36,18 @@ body {
   background-size: 50px 50px;
 }
 
-/* 3. Inputs Theme - SEEDLING PATTERN */
 body.theme-inputs {
   --primary-color: #546e7a;
   --primary-color-hover: #455a64;
   --secondary-color: #eceff1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24'%3E%3Cpath fill='%23546e7a' fill-opacity='0.08' d='M12 2C7.58 2 4 5.58 4 10v2h2c4.42 0 8-3.58 8-8V2M7 13c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3m12-3h-2c0 3.12-1.74 5.83-4.37 7.24L11.5 13.5l-1.41 1.41 2.34 5.25C13.58 20.67 14.73 21 16 21c4.42 0 8-3.58 8-8v-3z'/%3E%3C/svg%3E");
+  /* Pattern with Gray Fill (%23546e7a) */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10zM0 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10z' fill='%23546e7a' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
-/* 4. Services Theme - TRACTOR/GEAR PATTERN */
 body.theme-services {
   --primary-color: #0288d1;
   --primary-color-hover: #0277bd;
   --secondary-color: #e1f5fe;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24'%3E%3Cpath fill='%230288d1' fill-opacity='0.08' d='M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z'/%3E%3C/svg%3E");
+  /* Pattern with Blue Fill (%230288d1) */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10zM0 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10z' fill='%230288d1' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
