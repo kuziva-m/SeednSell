@@ -32,10 +32,11 @@
 
 /* 2. Base Theme (Produce) - CARROT PATTERN */
 body {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24'%3E%3Cpath fill='%23689f38' fill-opacity='0.08' d='M19.7 2.6a1.5 1.5 0 0 0-2.1 0l-10 10a8 8 0 0 0 10.3 12.3l2.8-2.8a1 1 0 0 0 .3-.7v-7.6a1 1 0 0 0-.3-.7L19.7 2.6zM6.5 7.5l-4 4a2 2 0 0 0 2.8 2.8l4-4-2.8-2.8zM12 2l-2 2 3 3 2-2-3-3z'/%3E%3C/svg%3E");
-  background-size: 50px 50px;
+  /* Pattern with Green Fill (%23689f38) */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10zM0 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10z' fill='%23689f38' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
+/* 2. Inputs Theme: Industrial Slate/Gray */
 body.theme-inputs {
   --primary-color: #546e7a;
   --primary-color-hover: #455a64;
@@ -44,6 +45,7 @@ body.theme-inputs {
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10zM0 30c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10z' fill='%23546e7a' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
+/* 3. Services Theme: Professional Ocean Blue */
 body.theme-services {
   --primary-color: #0288d1;
   --primary-color-hover: #0277bd;
