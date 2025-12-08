@@ -20,6 +20,9 @@ const profileForm = document.getElementById("profile-form");
 const profileMessage = document.getElementById("profile-message");
 const profileSubmitBtn = document.getElementById("profile-submit-btn");
 
+// Global variable for dashboard phone
+let profilePhoneIti = null;
+
 // --- CONFIGURATION: Zimbabwe Agriculture Taxonomy ---
 const ZIM_CATEGORIES = {
   produce: {
@@ -76,23 +79,14 @@ const ZIM_CATEGORIES = {
 export function initDashboardPage() {
   const currentUserId = getCurrentUserId();
 
-  // ★ REFACTORED: Event-driven initialization instead of polling loop ★
-  if (currentUserId) {
-    mountDashboard(currentUserId);
-  } else {
-    // Wait for the auth signal if not ready yet
-    document.addEventListener(
-      "auth:resolved",
-      (e) => {
-        mountDashboard(e.detail.userId);
-      },
-      { once: true }
-    );
+  // Guard: Wait for Auth
+  if (!currentUserId) {
+    setTimeout(() => {
+      if (getCurrentUserId()) initDashboardPage();
+    }, 500);
+    return;
   }
-}
 
-// Helper to load dashboard content once ID is confirmed
-function mountDashboard(currentUserId) {
   // Show Dashboard
   const layout = document.querySelector(".dashboard-layout");
   if (layout) layout.classList.add("is-ready");
@@ -105,11 +99,24 @@ function mountDashboard(currentUserId) {
   loadProfileData(currentUserId);
   fetchMyListings(currentUserId);
 
+  // ★ NEW: Initialize Phone Plugin on Profile Page
+  const phoneInput = document.getElementById("profile-phone");
+  if (phoneInput && window.intlTelInput && !profilePhoneIti) {
+    profilePhoneIti = window.intlTelInput(phoneInput, {
+      initialCountry: "zw",
+      preferredCountries: ["zw", "za"],
+      separateDialCode: true,
+      utilsScript:
+        "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+    });
+  }
+
   // ★ NEW: Dashboard Logout Listener ★
   const dashLogoutBtn = document.getElementById("dashboard-logout-btn");
   if (dashLogoutBtn) {
     dashLogoutBtn.addEventListener("click", (e) => {
       e.preventDefault();
+      // Open the global logout modal
       const modal = document.getElementById("logout-modal");
       if (modal) modal.classList.add("is-visible");
     });
@@ -210,20 +217,33 @@ async function loadProfileData(currentUserId) {
     .single();
   if (data) {
     document.getElementById("profile-name").value = data.full_name;
-    document.getElementById("profile-phone").value = data.phone_number;
+    // For phone, if plugin exists, use setNumber to ensure flag updates
+    if (profilePhoneIti) {
+      profilePhoneIti.setNumber(data.phone_number);
+    } else {
+      document.getElementById("profile-phone").value = data.phone_number;
+    }
     document.getElementById("profile-location").value = data.location;
   }
 }
 
 async function handleProfileUpdate(e, currentUserId) {
   e.preventDefault();
+
+  // Validate Phone
+  if (profilePhoneIti && !profilePhoneIti.isValidNumber()) {
+    setProfileMessage("Invalid phone number.", "error");
+    return;
+  }
+
   profileSubmitBtn.disabled = true;
   profileSubmitBtn.innerHTML = `<span class="spinner"></span>Updating...`;
 
   const name = document.getElementById("profile-name").value;
-  const phone = sanitizePhoneNumber(
-    document.getElementById("profile-phone").value
-  );
+  // Get formatted number from plugin
+  const phone = profilePhoneIti
+    ? profilePhoneIti.getNumber()
+    : document.getElementById("profile-phone").value;
   const location = document.getElementById("profile-location").value;
 
   const { error } = await sb
@@ -234,7 +254,8 @@ async function handleProfileUpdate(e, currentUserId) {
   if (error) setProfileMessage(`Error: ${error.message}`, "error");
   else {
     setProfileMessage("Profile updated!", "success");
-    document.getElementById("profile-phone").value = phone;
+    // Update the input with the clean formatted number
+    if (profilePhoneIti) profilePhoneIti.setNumber(phone);
   }
   profileSubmitBtn.disabled = false;
   profileSubmitBtn.innerHTML = "Update Profile";
@@ -280,7 +301,6 @@ async function loadListingForEdit(listingId, currentUserId) {
   ).innerHTML = `<i class="fa-solid fa-pen-to-square icon"></i> Edit Listing`;
   submitListingBtn.textContent = "Update Listing";
 
-  // Image Preview
   let previewWrapper = document.getElementById("image-preview-wrapper");
   if (!previewWrapper) {
     previewWrapper = document.createElement("div");
@@ -507,11 +527,4 @@ function setProfileMessage(msg, type) {
     profileMessage.textContent = msg;
     profileMessage.className = type;
   }
-}
-
-function sanitizePhoneNumber(phone) {
-  let digits = phone.replace(/\D/g, "");
-  if (digits.startsWith("0")) digits = digits.substring(1);
-  if (!digits.startsWith("263")) digits = "263" + digits;
-  return "+" + digits;
 }

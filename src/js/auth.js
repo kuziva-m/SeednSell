@@ -4,6 +4,7 @@ import { sb } from "./supabase.js";
 let userProfile = null;
 let currentUserId = null;
 let notificationSubscription = null;
+let signupPhoneIti = null;
 
 // --- Auth State Change (The "Guard") ---
 export function handleAuthStateChange() {
@@ -16,8 +17,7 @@ export function handleAuthStateChange() {
       // ============================
       currentUserId = session.user.id;
 
-      // ★ NEW: Dispatch event to notify page logic immediately ★
-      // This replaces fragile polling in other modules
+      // Dispatch event to notify page logic immediately
       document.dispatchEvent(
         new CustomEvent("auth:resolved", { detail: { userId: currentUserId } })
       );
@@ -88,6 +88,18 @@ export function initAuthPage() {
   const signupForm = document.getElementById("signup-form");
   const loginForm = document.getElementById("login-form");
   const signupPassword = document.getElementById("signup-password");
+  const phoneInput = document.getElementById("signup-phone");
+
+  // ★ Initialize Phone Plugin
+  if (phoneInput && window.intlTelInput) {
+    signupPhoneIti = window.intlTelInput(phoneInput, {
+      initialCountry: "zw", // Default to Zimbabwe
+      preferredCountries: ["zw", "za", "zm", "mz"], // Common neighbors
+      separateDialCode: true, // Shows flag + code separate from input
+      utilsScript:
+        "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js", // Enables formatting/validation
+    });
+  }
 
   if (signupPassword) {
     signupPassword.addEventListener("input", (e) => {
@@ -109,13 +121,37 @@ export function initAuthPage() {
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const submitBtn = signupForm.querySelector("button[type='submit']");
+
+      // ★ Validate Phone Number
+      if (signupPhoneIti) {
+        if (!signupPhoneIti.isValidNumber()) {
+          setMessage("Please enter a valid phone number.", "error");
+          phoneInput.style.borderColor = "var(--danger-color)";
+          return;
+        }
+        // Get the full number (e.g., +26377...)
+        const rawPhone = signupPhoneIti.getNumber();
+        // Overwrite the input value so the rest of the script uses the correct format
+        phoneInput.value = rawPhone;
+      }
+
+      // ★ Validate Email Format Strictly
+      const emailInput = document.getElementById("signup-email");
+      if (!validateEmail(emailInput.value)) {
+        setMessage("Please enter a valid email address.", "error");
+        emailInput.style.borderColor = "var(--danger-color)";
+        return;
+      }
+
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<span class="spinner"></span>Creating Account...`;
 
-      const email = document.getElementById("signup-email").value;
+      const email = emailInput.value;
       const password = document.getElementById("signup-password").value;
       const name = document.getElementById("signup-name").value;
-      const rawPhone = document.getElementById("signup-phone").value;
+
+      // Use the value extracted from plugin or raw input
+      const phone = phoneInput.value;
 
       // NEW FIELDS
       const city = document.getElementById("signup-city").value;
@@ -125,8 +161,6 @@ export function initAuthPage() {
 
       // Combine Location
       const fullLocation = `${city}, ${neighborhood}`;
-
-      const phone = sanitizePhoneNumber(rawPhone);
 
       const { data, error } = await sb.auth.signUp({
         email: email,
@@ -141,8 +175,6 @@ export function initAuthPage() {
       }
 
       if (data.user) {
-        // Note: Assuming your 'profiles' table can accept extra JSON data
-        // or you are just combining location. We will stick to the standard fields.
         const { error: profileError } = await sb.from("profiles").insert({
           id: data.user.id,
           full_name: name,
@@ -249,11 +281,11 @@ function setMessage(msg, type) {
   }
 }
 
-function sanitizePhoneNumber(phone) {
-  let digits = phone.replace(/\D/g, "");
-  if (digits.startsWith("0")) digits = digits.substring(1);
-  if (!digits.startsWith("263")) digits = "263" + digits;
-  return "+" + digits;
+// Helper: Strict Email Validator
+function validateEmail(email) {
+  // Checks for format: text @ text . text (at least 2 chars)
+  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return re.test(String(email).toLowerCase());
 }
 
 // Global Modal Logic (Logout)

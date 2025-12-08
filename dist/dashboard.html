@@ -16,6 +16,26 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"
+    />
+    <style>
+      /* Fix for intl-tel-input to match your modern form styles */
+      .iti {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      .iti__flag {
+        background-image: url("https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/img/flags.png");
+      }
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .iti__flag {
+          background-image: url("https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/img/flags@2x.png");
+        }
+      }
+    </style>
 
 
     <link
@@ -43,9 +63,9 @@
         });
       }
     </script>
-    <script type="module" crossorigin src="/assets/app-Bv5i1KIP.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/app-DpiimEyn.css">
+    <script type="module" crossorigin src="/assets/app-DfEgwXNQ.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/_responsive-Dn7dL3g9.css">
+    <link rel="stylesheet" crossorigin href="/assets/styles-DpiimEyn.css">
   </head>
   <body>
     <header id="global-header"></header>
@@ -255,6 +275,7 @@
     </div>
     <footer id="global-footer"></footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </body>
 </html>
