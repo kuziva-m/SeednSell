@@ -1,7 +1,7 @@
 // public/service-worker.js
 
-// ★★★ BUMP THIS VERSION EVERY TIME YOU DEPLOY (e.g. v11, v12...) ★★★
-const CACHE_NAME = "seed-sell-live-v11";
+// ★★★ BUMP THIS VERSION EVERY TIME YOU DEPLOY (e.g. v12...) ★★★
+const CACHE_NAME = "seed-sell-live-v12";
 
 const ASSETS_TO_CACHE = [
   "/",
@@ -22,9 +22,9 @@ const ASSETS_TO_CACHE = [
   "/manifest.json",
 ];
 
-// 1. INSTALL: Cache assets
+// 1. INSTALL
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // Force this worker to become active immediately
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
@@ -32,7 +32,7 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// 2. ACTIVATE: Clean up old caches & take control
+// 2. ACTIVATE
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -41,28 +41,44 @@ self.addEventListener("activate", (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== CACHE_NAME) {
-              console.log("Deleting old cache:", cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
-      .then(() => {
-        return self.clients.claim(); // ★★★ CRITICAL: Take control of all open pages immediately
-      })
+      .then(() => self.clients.claim())
   );
 });
 
-// 3. FETCH: Network-First Strategy for HTML (Ensures updates are seen)
+// 3. FETCH
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
-  // A. Supabase API: Always Network
+  // A. Supabase API: Stale-While-Revalidate (OFFLINE FIRST)
+  // Serve from cache immediately, then update cache from network
   if (url.hostname.includes("supabase.co")) {
-    return event.respondWith(fetch(event.request));
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) => {
+        return cache.match(event.request).then((cachedResponse) => {
+          const fetchPromise = fetch(event.request)
+            .then((networkResponse) => {
+              cache.put(event.request, networkResponse.clone());
+              return networkResponse;
+            })
+            .catch(() => {
+              // Network failed, just stick with what we have
+              return cachedResponse;
+            });
+
+          // Return cached response right away if we have it, else wait for network
+          return cachedResponse || fetchPromise;
+        });
+      })
+    );
+    return;
   }
 
-  // B. Images: Cache-First (Performance)
+  // B. Images: Cache-First
   if (
     url.pathname.includes("/product_images/") ||
     url.pathname.match(/\.(webp|png|jpg|jpeg|svg)$/)
@@ -83,13 +99,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // C. HTML/JS/CSS: Network First, Fallback to Cache (Robustness)
-  // This ensures the user gets the LATEST version if they have internet.
-  // If offline, they get the cached version.
+  // C. Core Assets: Network First, Fallback to Cache
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
-        // Update cache with new version
         const clone = networkResponse.clone();
         caches
           .open(CACHE_NAME)

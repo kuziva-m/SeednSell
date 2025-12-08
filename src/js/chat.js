@@ -16,12 +16,10 @@ const messageInput = document.getElementById("message-input");
 // --- Global State ---
 let activeChatRoomId = null;
 let lastMessageDate = null;
-// Removed pollingInterval and latestMessageTimestamp (no longer needed)
 
 // --- Functions ---
 
 export async function handleStartChat(farmerId, currentUserId) {
-  // Check if a room already exists
   const { data: existingRoom } = await sb
     .from("chat_rooms")
     .select("id")
@@ -32,7 +30,6 @@ export async function handleStartChat(farmerId, currentUserId) {
   if (existingRoom) {
     window.location.href = `/messages.html?room_id=${existingRoom.id}`;
   } else {
-    // Create new room
     const { data: newRoom, error } = await sb
       .from("chat_rooms")
       .insert({ buyer_id: currentUserId, farmer_id: farmerId })
@@ -51,11 +48,9 @@ export function initChatPage() {
     return;
   }
 
-  // Clear global listeners when entering chat page
   subscribeToNotifications(null, null);
 
   if (chatInputForm) {
-    // Modify button content for the new icon look
     const btn = chatInputForm.querySelector("button");
     if (btn) btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
 
@@ -70,7 +65,6 @@ async function loadChatPage(currentUserId) {
   if (!roomList) return;
   const unreadCounts = await checkForUnreadMessages();
 
-  // Fetch all rooms where user is buyer OR farmer
   const { data: rooms, error } = await sb
     .from("chat_rooms")
     .select(
@@ -85,7 +79,7 @@ async function loadChatPage(currentUserId) {
   }
   if (rooms.length === 0) {
     roomList.innerHTML = "<p style='padding:1rem'>No conversations yet.</p>";
-    if (chatHeader) chatHeader.innerHTML = "";
+    if (chatHeader) chatHeader.textContent = "";
     if (chatMessages)
       chatMessages.innerHTML = `
       <div class="chat-empty-state">
@@ -127,7 +121,6 @@ async function loadChatPage(currentUserId) {
     roomList.appendChild(roomEl);
   });
 
-  // Handle URL deep link
   const params = new URLSearchParams(window.location.search);
   const urlRoomId = params.get("room_id");
   if (urlRoomId) {
@@ -139,15 +132,12 @@ async function loadChatPage(currentUserId) {
 }
 
 async function loadChatRoom(roomId, roomName, currentUserId) {
-  // 1. Cleanup previous room
   activeChatRoomId = roomId;
   lastMessageDate = null;
-  // Removed stopPolling()
 
   const newUrl = `/messages.html?room_id=${roomId}`;
   window.history.pushState({ path: newUrl }, "", newUrl);
 
-  // 2. UI Updates
   const roomEl = document.querySelector(`.room-item[data-room-id="${roomId}"]`);
   if (roomEl) {
     roomEl.classList.add("active-room");
@@ -159,24 +149,29 @@ async function loadChatRoom(roomId, roomName, currentUserId) {
     if (el !== roomEl) el.classList.remove("active-room");
   });
 
-  chatHeader.innerHTML = `
-    <button id="chat-back-btn" class="chat-back-btn">
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
-    <p>${roomName}</p>
-  `;
+  // ★ SECURITY FIX: Using DOM API instead of innerHTML
+  chatHeader.innerHTML = ""; // Clear existing
 
-  document.getElementById("chat-back-btn").addEventListener("click", () => {
+  const backBtn = document.createElement("button");
+  backBtn.id = "chat-back-btn";
+  backBtn.className = "chat-back-btn";
+  backBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
+  backBtn.addEventListener("click", () => {
     document.querySelector(".chat-container").classList.remove("chat-active");
     activeChatRoomId = null;
     subscribeToNotifications(null, null);
     window.history.pushState({ path: "/messages.html" }, "", "/messages.html");
   });
 
+  const titleP = document.createElement("p");
+  titleP.textContent = roomName; // Safe text insertion
+
+  chatHeader.appendChild(backBtn);
+  chatHeader.appendChild(titleP);
+
   chatMessages.innerHTML =
     "<p style='padding:2rem; text-align:center;'>Loading messages...</p>";
 
-  // 3. Mark Read
   await sb
     .from("chat_messages")
     .update({ is_read: true })
@@ -184,7 +179,6 @@ async function loadChatRoom(roomId, roomName, currentUserId) {
     .neq("sender_id", currentUserId);
   await checkForUnreadMessages();
 
-  // 4. Initial Fetch
   const { data: messages, error } = await sb
     .from("chat_messages")
     .select("*")
@@ -202,13 +196,8 @@ async function loadChatRoom(roomId, roomName, currentUserId) {
   });
   scrollToBottom();
 
-  // 5. Removed startPolling(). We now rely entirely on the subscription below.
-
-  // 6. Keep Realtime as the primary listener
   subscribeToNotifications((msg) => {
-    // Realtime logic
     if (msg.room_id === activeChatRoomId) {
-      // Check if we already have this message (to prevent duplicates)
       const existing = document.getElementById(`msg-${msg.id}`);
       if (!existing) {
         addMessageToUI(msg, currentUserId);
@@ -219,10 +208,7 @@ async function loadChatRoom(roomId, roomName, currentUserId) {
   }, roomId);
 }
 
-// --- Display Logic ---
-
 function addMessageToUI(msg, currentUserId) {
-  // 1. Date Header Check
   const dateHeader = formatDateHeader(msg.created_at);
   if (dateHeader) {
     const headerEl = document.createElement("div");
@@ -231,9 +217,8 @@ function addMessageToUI(msg, currentUserId) {
     chatMessages.appendChild(headerEl);
   }
 
-  // 2. Bubble Creation
   const bubble = document.createElement("div");
-  bubble.id = `msg-${msg.id}`; // ID for De-duplication
+  bubble.id = `msg-${msg.id}`;
   bubble.className = "message-bubble";
   bubble.classList.add(msg.sender_id === currentUserId ? "sender" : "receiver");
 
@@ -269,7 +254,6 @@ async function handleSendMessage(e, currentUserId) {
 
   messageInput.disabled = true;
 
-  // Optimistic UI update
   const tempId = `temp-${Date.now()}`;
 
   const optimisticMsg = {
@@ -297,9 +281,7 @@ async function handleSendMessage(e, currentUserId) {
 
   if (error) {
     console.error("Error sending:", error.message);
-    // You could show an error state here on the bubble
   } else {
-    // Replace the temporary ID with the real ID to prevent duplicates
     const bubble = document.getElementById(`msg-${tempId}`);
     if (bubble) {
       bubble.id = `msg-${data.id}`;
@@ -309,8 +291,6 @@ async function handleSendMessage(e, currentUserId) {
   messageInput.disabled = false;
   messageInput.focus();
 }
-
-// --- Helpers ---
 
 function formatMessageTime(dateString) {
   const date = new Date(dateString);

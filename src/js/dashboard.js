@@ -477,32 +477,60 @@ async function fetchMyListings(currentUserId) {
     } else {
       myListingsLoading.style.display = "none";
       data.forEach((item) => {
+        // ★ SECURITY FIX: Using DOM creation instead of innerHTML to prevent XSS
         const div = document.createElement("div");
         div.className = "listing-card";
-        div.innerHTML = `
-          <div class="listing-card-content" style="padding:1rem;">
-            <h4 style="margin:0 0 0.5rem 0; font-size:1rem; color:#666; text-transform:uppercase; font-size:0.8rem; font-weight:700;">
-              ${item.category || "Produce"} - ${item.sub_category || "General"}
-            </h4>
-            <h3 style="margin:0 0 0.5rem 0;">${item.product_name}</h3>
-            <p style="color:var(--primary-color); font-weight:700;">$${
-              item.price
-            }</p>
-          </div>
-          <div class="listing-card-actions" style="padding:0 1rem 1rem 1rem; display:flex; gap:0.5rem;">
-            <a href="/dashboard.html?edit_id=${
-              item.id
-            }" class="btn edit-btn" style="flex:1; text-align:center;">Edit</a>
-            <button class="btn delete-btn" data-id="${
-              item.id
-            }" style="flex:1;">Delete</button>
-          </div>
-        `;
-        div
-          .querySelector(".delete-btn")
-          .addEventListener("click", () =>
-            handleDelete(item.id, currentUserId)
-          );
+
+        // Content Wrapper
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "listing-card-content";
+        contentDiv.style.padding = "1rem";
+
+        const h4 = document.createElement("h4");
+        h4.style.cssText =
+          "margin:0 0 0.5rem 0; font-size:1rem; color:#666; text-transform:uppercase; font-size:0.8rem; font-weight:700;";
+        h4.textContent = `${item.category || "Produce"} - ${
+          item.sub_category || "General"
+        }`;
+
+        const h3 = document.createElement("h3");
+        h3.style.margin = "0 0 0.5rem 0";
+        h3.textContent = item.product_name; // Safe from XSS
+
+        const p = document.createElement("p");
+        p.style.cssText = "color:var(--primary-color); font-weight:700;";
+        p.textContent = `$${item.price}`;
+
+        contentDiv.appendChild(h4);
+        contentDiv.appendChild(h3);
+        contentDiv.appendChild(p);
+
+        // Actions Wrapper
+        const actionsDiv = document.createElement("div");
+        actionsDiv.className = "listing-card-actions";
+        actionsDiv.style.cssText =
+          "padding:0 1rem 1rem 1rem; display:flex; gap:0.5rem;";
+
+        const editLink = document.createElement("a");
+        editLink.href = `/dashboard.html?edit_id=${item.id}`;
+        editLink.className = "btn edit-btn";
+        editLink.style.cssText = "flex:1; text-align:center;";
+        editLink.textContent = "Edit";
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "btn delete-btn";
+        deleteBtn.dataset.id = item.id;
+        deleteBtn.style.flex = "1";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", () =>
+          handleDelete(item.id, currentUserId)
+        );
+
+        actionsDiv.appendChild(editLink);
+        actionsDiv.appendChild(deleteBtn);
+
+        div.appendChild(contentDiv);
+        div.appendChild(actionsDiv);
         myListingsGrid.appendChild(div);
       });
     }
