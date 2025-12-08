@@ -1,102 +1,163 @@
-/* ★★★ NEW: Auth Form Transitions ★★★ */
+/* src/css/_forms.css */
+
+/* --- Container & Animation --- */
+.auth-container {
+  max-width: 400px; /* Slimmer profile */
+  margin: 4rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 16px; /* Modern rounded corners */
+  /* Soft, deep shadow for 'floating' effect */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  min-height: 520px;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+/* Form Transition Logic */
 .auth-form {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease-in-out;
-  /* Hide by default */
+  transform: translateX(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
   display: block;
-  position: absolute; /* Stack them */
-  width: calc(100% - 4rem); /* Match container padding */
+  position: absolute;
+  top: 2.5rem;
+  left: 2.5rem;
+  right: 2.5rem;
 }
 
 .auth-form.is-active {
   opacity: 1;
   pointer-events: auto;
-  position: relative; /* Take up space */
-}
-
-.auth-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  /* ★★★ NEW: Prevent overflow during switch ★★★ */
+  transform: translateX(0);
   position: relative;
-  overflow: hidden;
-  /* ★★★ NEW: Adjust min-height to prevent layout jump ★★★ */
-  min-height: 500px;
-}
-/* ★★★ END NEW STYLES ★★★ */
-.auth-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
+/* --- Typography --- */
 .auth-form h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
+  margin-bottom: 2rem;
+  color: var(--primary-color); /* Brand Green */
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: -0.5px;
 }
 
+/* --- Inputs --- */
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #555;
+  margin-left: 4px;
 }
 
-/* ... */
 .form-group input,
 .form-group select,
 .form-group textarea {
-  /* This line was missing from the partial */
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  /* ★★★ UI FIX: Standardize on 8px ★★★ */
-  border-radius: 8px;
-  font-size: 1rem;
-  /* This ensures the form inputs use the right font */
+  padding: 0.9rem 1rem;
+  /* Light gray bg instead of white for depth */
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px; /* Smoother input corners */
+  font-size: 0.95rem;
   font-family: "Poppins", sans-serif;
+  color: #333;
+  transition: all 0.2s ease;
+  outline: none;
 }
-/* ... */
 
+/* Focus State - The "Glow" */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  background-color: #fff;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(104, 159, 56, 0.15); /* Brand Green Glow */
+}
+
+/* --- Hack to remove Chrome's Ugly Yellow Autofill --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #f8f9fa inset !important;
+  -webkit-text-fill-color: #333 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* --- Buttons --- */
 .auth-form button {
   width: 100%;
-  font-size: 1.1rem;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(104, 159, 56, 0.25); /* Green Shadow */
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.auth-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(104, 159, 56, 0.35);
+}
+
+.auth-form button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- Links & Footer --- */
 .auth-toggle {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .auth-toggle a {
-  color: #689f38;
-  font-weight: 700;
+  color: var(--primary-color);
+  font-weight: 600;
   text-decoration: none;
+  margin-left: 5px;
+}
+
+.auth-toggle a:hover {
+  text-decoration: underline;
+}
+
+/* Layout for side-by-side inputs */
+.form-row {
+  display: flex;
+  gap: 1rem;
 }
 
 #auth-message {
   text-align: center;
-  margin-top: 1rem;
-  font-weight: 600;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 1.5em; /* Prevents layout jump */
 }
 
 #auth-message.success {
-  color: green;
+  color: #2e7d32;
 }
-
 #auth-message.error {
-  color: red;
+  color: #d32f2f;
 }
