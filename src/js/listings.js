@@ -160,14 +160,28 @@ function renderSkeletons(gridElement, count = 4) {
   for (let i = 0; i < count; i++) {
     const card = document.createElement("div");
     card.className = "listing-card skeleton-card";
-    card.innerHTML = `
-      <div class="skeleton skeleton-img"></div>
-      <div class="skeleton-content">
-        <div class="skeleton skeleton-text"></div>
-        <div class="skeleton skeleton-text short"></div>
-        <div class="skeleton skeleton-text price"></div>
-      </div>
-    `;
+
+    // Create DOM elements safely
+    const imgDiv = document.createElement("div");
+    imgDiv.className = "skeleton skeleton-img";
+
+    const contentDiv = document.createElement("div");
+    contentDiv.className = "skeleton-content";
+
+    const text1 = document.createElement("div");
+    text1.className = "skeleton skeleton-text";
+    const text2 = document.createElement("div");
+    text2.className = "skeleton skeleton-text short";
+    const text3 = document.createElement("div");
+    text3.className = "skeleton skeleton-text price";
+
+    contentDiv.appendChild(text1);
+    contentDiv.appendChild(text2);
+    contentDiv.appendChild(text3);
+
+    card.appendChild(imgDiv);
+    card.appendChild(contentDiv);
+
     gridElement.appendChild(card);
   }
 }
@@ -185,11 +199,19 @@ function renderEmptyState(
   const container = document.createElement("div");
   container.className = "empty-state fade-in-section is-visible";
 
-  container.innerHTML = `
-    <i class="fa-solid fa-basket-shopping"></i>
-    <h3>${title}</h3>
-    <p>${message}</p>
-  `;
+  // Icons are generally safe to insert as HTML if hardcoded
+  const icon = document.createElement("i");
+  icon.className = "fa-solid fa-basket-shopping";
+
+  const h3 = document.createElement("h3");
+  h3.textContent = title;
+
+  const p = document.createElement("p");
+  p.textContent = message;
+
+  container.appendChild(icon);
+  container.appendChild(h3);
+  container.appendChild(p);
 
   if (actionText && actionCallback) {
     const btn = document.createElement("button");
@@ -231,9 +253,6 @@ export async function initListingsPage() {
 
   // 4. Load Main Listings (MOCK DATA)
   renderMockListings();
-
-  // Note: We disabled the real-time search listeners for Phase 1 because
-  // we are only showing a static list of examples.
 }
 
 /**
@@ -278,16 +297,14 @@ function applyCategoryTheme() {
     const leftDesc = document.getElementById("promo-left-desc");
     const leftBtn = document.getElementById("promo-left-btn");
 
-    if (leftTitle) leftTitle.innerHTML = config.promo.left.title;
+    if (leftTitle) leftTitle.innerHTML = config.promo.left.title; // Icons are trusted HTML
     if (leftDesc) leftDesc.textContent = config.promo.left.desc;
     if (leftBtn) {
       leftBtn.textContent = config.promo.left.btn;
-      // Check if the button text is the specific number to make it a link
       if (config.promo.left.btn.includes("+263")) {
         leftBtn.href = "https://wa.me/263785141781";
         leftBtn.target = "_blank";
       } else {
-        // Fallback for other buttons if any
         leftBtn.href = "/contact.html";
         leftBtn.target = "";
       }
@@ -297,7 +314,7 @@ function applyCategoryTheme() {
     const rightDesc = document.getElementById("promo-right-desc");
     const rightBtn = document.getElementById("promo-right-btn");
 
-    if (rightTitle) rightTitle.innerHTML = config.promo.right.title;
+    if (rightTitle) rightTitle.innerHTML = config.promo.right.title; // Icons are trusted HTML
     if (rightDesc) rightDesc.textContent = config.promo.right.desc;
     if (rightBtn) rightBtn.textContent = config.promo.right.btn;
   }
@@ -307,7 +324,11 @@ async function loadLocationDropdown() {
   const locationSelect = document.getElementById("location-input");
   if (!locationSelect) return;
   // Phase 1: Keep location dummy
-  locationSelect.innerHTML = '<option value="">All Locations</option>';
+  locationSelect.innerHTML = "";
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.textContent = "All Locations";
+  locationSelect.appendChild(opt);
 }
 
 /**
@@ -352,6 +373,7 @@ function renderMockListings() {
     const contentDiv = document.createElement("div");
     contentDiv.className = "listing-card-content";
 
+    // ★ SECURITY FIX: Using textContent ★
     const title = document.createElement("h3");
     title.textContent = item.product_name;
 
@@ -393,7 +415,7 @@ async function loadFeaturedListings() {
   );
 }
 
-// ... (Rest of Detail Page logic remains, though it won't be reached easily in Phase 1) ...
+// ... Detail Page ...
 export async function initListingDetailPage() {
   if (!listingDetailContainer) return;
   const params = new URLSearchParams(window.location.search);
@@ -415,20 +437,40 @@ export async function initListingDetailPage() {
   if (data) {
     document.title = `${data.product_name} - Seed & Sell`;
 
-    // Determine context for breadcrumbs & units
     const cat = data.category || "produce";
     const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG["produce"];
     const unit = config.unitDefault;
 
     if (breadcrumbContainer) {
-      breadcrumbContainer.innerHTML = `<a href="index.html?cat=${cat}">Home</a> &gt; <a href="index.html?cat=${cat}#marketplace-container">${
-        cat.charAt(0).toUpperCase() + cat.slice(1)
-      }</a> &gt; <span class="current">${data.product_name}</span>`;
+      breadcrumbContainer.innerHTML = ""; // Clear existing
+      const homeLink = document.createElement("a");
+      homeLink.href = `index.html?cat=${cat}`;
+      homeLink.textContent = "Home";
+
+      const sep1 = document.createTextNode(" > ");
+
+      const catLink = document.createElement("a");
+      catLink.href = `index.html?cat=${cat}#marketplace-container`;
+      catLink.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+
+      const sep2 = document.createTextNode(" > ");
+
+      const span = document.createElement("span");
+      span.className = "current";
+      span.textContent = data.product_name; // Safe!
+
+      breadcrumbContainer.appendChild(homeLink);
+      breadcrumbContainer.appendChild(sep1);
+      breadcrumbContainer.appendChild(catLink);
+      breadcrumbContainer.appendChild(sep2);
+      breadcrumbContainer.appendChild(span);
     }
+
     const currentUserId = getCurrentUserId();
     const isOwner = currentUserId && currentUserId === data.farmer_id;
     listingDetailContainer.innerHTML = "";
 
+    // Image
     const imageWrapper = document.createElement("div");
     imageWrapper.className = "listing-detail-image-wrapper";
     const img = document.createElement("img");
@@ -459,44 +501,84 @@ export async function initListingDetailPage() {
     img.alt = data.product_name;
     imageWrapper.appendChild(img);
 
+    // Info
     const listingInfo = document.createElement("div");
     listingInfo.className = "listing-detail-info";
+
     const title = document.createElement("h2");
     title.id = "listing-title";
-    title.textContent = data.product_name;
+    title.textContent = data.product_name; // Safe
+
     const price = document.createElement("p");
     price.id = "listing-price";
     price.textContent = `$${data.price} / ${unit}`;
 
+    // Meta Group (Location, Qty)
     const metaGroup = document.createElement("div");
     metaGroup.className = "listing-meta-group";
-    metaGroup.innerHTML = `
-      <p class="listing-meta-item"><i class="fa-solid fa-cubes"></i> <span><strong>Available:</strong> ${
-        data.quantity_available || "Not specified"
-      } ${unit}s</span></p>
-      <p class="listing-meta-item"><i class="fa-solid fa-location-dot"></i> <span><strong>Location:</strong> ${
-        data.location
-      }</span></p>
-    `;
 
+    // Qty
+    const pQty = document.createElement("p");
+    pQty.className = "listing-meta-item";
+    pQty.innerHTML = `<i class="fa-solid fa-cubes"></i>`;
+    const spanQty = document.createElement("span");
+    spanQty.innerHTML = `<strong>Available:</strong> `;
+    spanQty.appendChild(
+      document.createTextNode(
+        `${data.quantity_available || "Not specified"} ${unit}s`
+      )
+    );
+    pQty.appendChild(spanQty);
+
+    // Location
+    const pLoc = document.createElement("p");
+    pLoc.className = "listing-meta-item";
+    pLoc.innerHTML = `<i class="fa-solid fa-location-dot"></i>`;
+    const spanLoc = document.createElement("span");
+    spanLoc.innerHTML = `<strong>Location:</strong> `;
+    spanLoc.appendChild(document.createTextNode(data.location)); // Safe!
+    pLoc.appendChild(spanLoc);
+
+    metaGroup.appendChild(pQty);
+    metaGroup.appendChild(pLoc);
+
+    // Description
     const descriptionCard = document.createElement("div");
     descriptionCard.className = "listing-description-card";
-    descriptionCard.innerHTML = `<h3>Description</h3><p>${
-      data.description || "No description provided."
-    }</p>`;
+    const descTitle = document.createElement("h3");
+    descTitle.textContent = "Description";
+    const descText = document.createElement("p");
+    descText.textContent = data.description || "No description provided."; // Safe!
+
+    descriptionCard.appendChild(descTitle);
+    descriptionCard.appendChild(descText);
 
     listingInfo.appendChild(title);
     listingInfo.appendChild(price);
     listingInfo.appendChild(metaGroup);
     listingInfo.appendChild(descriptionCard);
 
+    // Sidebar
     const listingSidebar = document.createElement("div");
     listingSidebar.className = "listing-detail-sidebar";
     const farmerCard = document.createElement("div");
     farmerCard.className = "farmer-details-card";
-    farmerCard.innerHTML = `<h3>Seller Details</h3><p class="listing-meta-item"><i class="fa-solid fa-user"></i> <span><strong>Contact:</strong> ${
-      data.profiles?.full_name || "Unknown"
-    }</span></p>`;
+
+    const sellerTitle = document.createElement("h3");
+    sellerTitle.textContent = "Seller Details";
+
+    const pSeller = document.createElement("p");
+    pSeller.className = "listing-meta-item";
+    pSeller.innerHTML = `<i class="fa-solid fa-user"></i>`;
+    const spanSeller = document.createElement("span");
+    spanSeller.innerHTML = `<strong>Contact:</strong> `;
+    spanSeller.appendChild(
+      document.createTextNode(data.profiles?.full_name || "Unknown")
+    ); // Safe!
+    pSeller.appendChild(spanSeller);
+
+    farmerCard.appendChild(sellerTitle);
+    farmerCard.appendChild(pSeller);
 
     if (isOwner) {
       const editBtn = document.createElement("a");
@@ -512,8 +594,6 @@ export async function initListingDetailPage() {
         const user = getUserProfile();
         if (!user) return alert("Please log in as a Buyer to chat.");
         if (user.user_role === "farmer" && cat === "produce") {
-          // Optional: Restrict farmers buying from farmers only for Produce
-          // For Inputs/Services, farmers usually BUY, so we allow it.
           return alert("Farmers cannot chat with other farmers.");
         }
         handleStartChat(data.profiles.id, getCurrentUserId());
