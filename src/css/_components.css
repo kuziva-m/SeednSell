@@ -1,4 +1,64 @@
-/* Homepage Section Backgrounds */
+/* src/css/_components.css */
+
+/* --- Hero Section (Desktop Default) --- */
+.hero {
+  /* ★ FIXED: Removed ALL top padding to kill the space. */
+  padding: 0 1rem 2rem 1rem;
+  background-color: var(--bg-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: auto;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: row; /* Side-by-side layout */
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  gap: 2rem;
+  width: 100%;
+}
+
+.hero-text-column {
+  flex: 1;
+  max-width: 600px;
+}
+
+.hero-text-column h2 {
+  /* ★ FIXED: Kill browser default margin that pushes text down */
+  margin-top: 0;
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.hero-logo-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: contain;
+}
+
+/* --- Homepage Promo Section --- */
 .promo-section {
   background-image: url("/images/field.webp");
   background-size: cover;
@@ -211,9 +271,9 @@
   margin-top: 0.5rem;
 }
 
-/* --- NEW: Visual Empty State --- */
+/* --- Visual Empty State --- */
 .empty-state {
-  grid-column: 1 / -1; /* Spans full width of grid */
+  grid-column: 1 / -1;
   text-align: center;
   padding: 3rem 1rem;
   background-color: #f9f9f9;
@@ -238,63 +298,4 @@
   font-size: 0.95rem;
   max-width: 300px;
   margin: 0 auto 1.5rem auto;
-}
-
-/* --- Hero Section (Desktop Default) --- */
-.hero {
-  /* ★ FIXED: Reduced padding. Was '2rem 1rem'. 
-     Now 0.5rem top creates a tight but safe gap. */
-  padding: 0.5rem 1rem 2rem 1rem;
-  background-color: var(--bg-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: auto;
-}
-
-.hero-content {
-  display: flex;
-  flex-direction: row; /* Side-by-side layout */
-  align-items: center;
-  justify-content: space-between;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  gap: 2rem;
-  width: 100%;
-}
-
-.hero-text-column {
-  flex: 1;
-  max-width: 600px;
-}
-
-.hero-text-column h2 {
-  /* ★ FIXED: This is the magic line. Removes the invisible browser gap. */
-  margin-top: 0;
-
-  font-size: 3rem;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
-  color: var(--text-main);
-  font-weight: 800;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.hero-logo-column {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero-logo {
-  display: block; /* Prevents inline gap issues */
-  max-width: 100%;
-  height: auto;
-  max-height: 450px;
-  object-fit: contain;
 }

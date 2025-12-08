@@ -1,32 +1,31 @@
 /* src/css/_responsive.css */
 
-/* Switch to Mobile View earlier (900px) to accommodate the new wider Desktop Header */
+/* Switch to Mobile View earlier (900px) */
 @media (max-width: 900px) {
   /* --- 1. HEADER ADJUSTMENTS --- */
-  /* Make the container a flex row to hold Logo + Pills inline */
   .header-container {
     display: flex;
     justify-content: flex-start; /* Align start to keep logo left */
     align-items: center;
     padding: 0 1rem;
     gap: 1rem; /* Space between logo and buttons */
-    overflow: hidden; /* Prevent layout breakage */
-    height: 60px; /* Reduce height specifically for mobile */
+    overflow: hidden;
+    height: 70px; /* Increased height for bigger touch targets */
   }
 
   header {
-    height: 60px; /* Match container height */
+    height: 70px;
   }
 
   header h1 {
-    font-size: 1.2rem; /* Slightly smaller logo to save space */
-    white-space: nowrap; /* Keep logo on one line */
-    flex-shrink: 0; /* Prevent logo from squishing */
+    font-size: 1.1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
     line-height: 1;
   }
 
   .logo-link {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   /* Hide Desktop-Specific Zones */
@@ -34,26 +33,26 @@
     display: none !important;
   }
 
-  /* ★ COMPACT INLINE NAV (Side-by-Side) ★ */
+  /* --- COMPACT INLINE NAV (Side-by-Side) --- */
   .header-center {
     display: flex !important;
-    position: static; /* Remove absolute positioning */
-    width: auto; /* Take up remaining space */
-    flex-grow: 1; /* Expand to fill space */
-    overflow-x: auto; /* Enable horizontal scroll */
+    position: static;
+    width: auto;
+    flex-grow: 1;
+    overflow-x: auto;
     padding: 0;
     background: transparent;
     box-shadow: none;
     justify-content: flex-start;
     align-items: center;
 
-    /* Hide scrollbars for a clean look */
+    /* Hide scrollbars */
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
   }
 
   .header-center::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
   }
 
   .nav-pills-container {
@@ -62,26 +61,32 @@
     background: transparent;
     gap: 8px;
     padding: 0;
-    padding-right: 1rem; /* Buffer at the end of scroll */
+    padding-right: 1rem; /* Buffer at end */
   }
 
-  /* Make pills smaller and compact */
+  /* ★ MODERN TOUCH TARGETS (40px) ★ */
   .nav-pill {
-    padding: 5px 12px;
-    font-size: 0.75rem;
+    padding: 0 16px;
+    font-size: 0.85rem;
     border: 1px solid #eee;
     background: #f9f9f9;
     white-space: nowrap;
-    margin: 0; /* Remove default margins if any */
-    height: 32px; /* Fixed height for consistency */
+    margin: 0;
+    height: 40px; /* Easy to tap */
+    display: flex;
+    align-items: center;
+    border-radius: 20px; /* Fully rounded */
   }
 
-  /* Hide the top hamburger menu (we use the Bottom Bar "Menu" tab) */
+  .nav-pill i {
+    margin-right: 6px;
+  }
+
+  /* Hide hamburger (we use bottom nav) */
   .mobile-nav-toggle {
     display: none !important;
   }
 
-  /* Prevent scrolling when menu is open */
   body.nav-open {
     overflow: hidden;
   }
@@ -90,17 +95,13 @@
   .hero-content {
     flex-direction: column-reverse;
     text-align: center;
-    padding: 1rem;
-    margin-top: 0; /* RESET MARGIN: No longer needed as header is single row */
-  }
-
-  .hero-logo-column {
-    text-align: center;
+    padding: 0.5rem; /* Tight padding */
+    margin-top: 0;
   }
 
   .hero-logo {
-    max-width: 200px;
-    margin-bottom: 1rem;
+    max-width: 180px;
+    margin-bottom: 0.5rem;
   }
 
   .hero-text-column {
@@ -108,7 +109,8 @@
   }
 
   .hero-text-column h2 {
-    font-size: 2.2rem;
+    font-size: 2rem;
+    margin-top: 0; /* Remove browser default margin */
   }
 
   .hero-text-column p {
@@ -119,7 +121,7 @@
   #listing-detail-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
   }
 
   .farmer-details-card {
@@ -224,7 +226,7 @@
     width: 100%;
     height: 65px;
     background-color: #ffffff;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
     z-index: 1000;
     justify-content: space-around;
     align-items: center;
@@ -314,17 +316,16 @@
     width: 100%;
     border-radius: 20px 20px 0 0;
     padding: 1.5rem;
-    transform: translateY(100%); /* Hidden below screen */
+    transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
-    /* Allow scrolling inside the menu if it gets too tall */
     max-height: 80vh;
     display: flex;
     flex-direction: column;
   }
 
   .mobile-menu-overlay.is-visible .mobile-menu-content {
-    transform: translateY(0); /* Slide up */
+    transform: translateY(0);
   }
 
   .mobile-menu-header {
@@ -334,7 +335,7 @@
     margin-bottom: 1rem;
     border-bottom: 1px solid #eee;
     padding-bottom: 1rem;
-    flex-shrink: 0; /* Keep header visible */
+    flex-shrink: 0;
   }
 
   .mobile-menu-header h3 {
@@ -352,13 +353,11 @@
     padding: 0.5rem;
   }
 
-  /* Scrollable Links Area */
   .mobile-menu-scroll {
     overflow-y: auto;
     padding-bottom: calc(2rem + env(safe-area-inset-bottom));
   }
 
-  /* New Section Headers */
   .menu-section {
     margin-bottom: 1.5rem;
   }
@@ -397,7 +396,7 @@
   }
 
   .menu-link i {
-    width: 35px; /* Fixed width for icon alignment */
+    width: 35px;
     font-size: 1.2rem;
     color: var(--primary-color);
     text-align: center;
